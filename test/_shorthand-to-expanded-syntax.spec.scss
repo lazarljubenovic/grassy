@@ -1,0 +1,32 @@
+@import 'true';
+@import '../src/shorthand-to-expanded-syntax';
+
+@include test-module('Shorthand to expanded syntax') {
+
+  //$tests: (
+  //                (1 1 2): ((1 0) (1 2) (2 3)),
+  //                (1,): ((1 0),),
+  //);
+
+  @include test('transforms a simple case') {
+    $a-list: 1 1 2;
+    $actual: _shorthand-to-expanded-chained($a-list);
+    $expected: (1 0) (1 0) (2 0);
+    @include assert-equal($actual, $expected);
+  }
+
+  @include test('transforms a mixed combo') {
+    $a-list: 1 1 (2 1) 2;
+    $actual: _shorthand-to-expanded-chained($a-list);
+    $expected: (1 0) (1 0) (2 1) (2 0);
+    @include assert-equal($actual, $expected);
+  }
+
+  @include test('transforms when everything is already expanded') {
+    $a-list: (1 0) (1 0) (2 1) (2 0);
+    $actual: _shorthand-to-expanded-chained($a-list);
+    $expected: (1 0) (1 0) (2 1) (2 0);
+    @include assert-equal($actual, $expected);
+  }
+
+}

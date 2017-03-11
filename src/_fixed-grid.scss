@@ -1,0 +1,173 @@
+@import 'util/global-utils';
+
+///
+/// Use this when you know the number of columns. All cells are always of equal width
+/// (with exception of the last or first column in combination with some flags).
+/// You are not in charge of cell sizes; you can only influence the gutter width.
+///
+/// @param {Number} $number-of-columns The number of columns the grid will have.
+///
+/// @param {Number} $gutter-width [1em] The distance between two horizontal neighbor
+/// cells.
+///
+/// @param {Number} $gutter-height [$gutter-height] The distance between two vertical
+/// neighbor cells.
+///
+/// @ignore @param {Boolean} $assume-divisible
+/// @ignore By default, this mixin tries to work with any HTML you provide it. This means
+/// @ignore that even when you guarantee your HTML will have a certain structure, mixin
+/// @ignore will guarantee that it won't break with more/less elements in HTML than
+/// @ignore expected.
+/// @ignore
+/// @ignore For example, this mixin takes care of cases where you specify a two-column layout,
+/// @ignore yet provide an uneven number of elements in HTML, for example 3. If you can guarantee
+/// @ignore that number of elements in the container will always be divisible by number of columns
+/// @ignore (`$number-of-columns`), you can set the flag `$assume-no-dangling-elements` to `true`.
+/// @ignore
+/// @ignore Note that the resulting grid will still be uneven. For this behaviour, see
+/// @ignore `$distribute-dangling`.
+/// @ignore TODO: This ^ appears to be useless after all. However, carefully consider what can go
+/// @ignore wrong if it's left out.
+///
+/// @param {Boolean} $distribute-dangling
+/// When there are not enough elements in the last column, they are left dangling to the
+/// left, making the grid uneven. By setting this parameter to `true`, you can force the
+/// grid to make the dangling elements in the last column wider.
+///
+/// In you'd prefer this to happen in the first column, check out `$dangling-at-beginning`.
+///
+/// @param {Boolean} $dangling-at-beginning
+/// By default, dangling elements are at the bottom of the grid. If this flag is set,
+/// the dangling elements considered to be the ones at the first row of the grid.
+///
+/// This flag makes sense only if `$distribute-dangling` is set to true.
+///
+/// @output The CSS properties necessary for making the grid look the specified way.
+///
+/// @access public
+///
+/// @group Grid API
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @example scss The basic usage
+///   @include fixed-grid(3);
+///   // with 6 elements    with 5 elements    with 4 elements
+///   // x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+///   // x-x x-x x-x        x-x x-x            x-x
+///
+/// @example scss Handling dangling elements
+///   @include fixed-grid(3, $distribute-dangling: true);
+///   // with 6 elements    with 5 elements    with 4 elements
+///   // x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+///   // x-x x-x x-x        x-x-x x-x-x        x-x-x-x-x-x
+///
+/// @example scss Handling dangling element (at top)
+///   @include fixed-grid(3, $distribute-dangling: true);
+///   // with 6 elements    with 5 elements    with 4 elements
+///   // x-x x-x x-x        x-x-x x-x-x        x-x-x-x-x-x
+///   // x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+///
+@mixin fixed-grid(
+  $number-of-columns, $gutter-width: 1em, $gutter-height: $gutter-width,
+  // flags:
+  $assume-no-dangling-elements: false,
+  $distribute-dangling: false,
+  $dangling-at-beginning: false
+) {
+  $n: $number-of-columns;
+  $g: $gutter-width;
+  $width: _get-width($n, $g);
+  display: flex;
+  flex-wrap: wrap;
+
+  > * {
+    width: $width;
+    margin-bottom: $gutter-height;
+
+    @if not $dangling-at-beginning {
+      &:not(:nth-child(#{$n}n)) {
+        margin-right: $g;
+      }
+    } @else {
+      &:not(:nth-last-child(#{$n}n + 1)) {
+        margin-right: $g;
+      }
+    }
+
+    // Handle the bottom-margin of last row
+    // This depends on do we know that there will be dangling elements or not
+    @if not $assume-no-dangling-elements {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    } @else {
+      // We don't need to loop over every possible number of dangling elements since
+      // we know that it's always equal to $n.
+      @for $i from 1 through $n {
+        &:nth-last-child(#{$i}) {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    // If dangling elements are at the top, that means that the bottom row will always be
+    // filled completely. In this case we want to reset those elements' bottom margin to 0,
+    // however only if there are more than $n elements in the container:
+    @if $dangling-at-beginning {
+      // For every possible number of dangling elements (at the top):
+      @for $k from 1 through $n {
+        // An inner loop to handle "however only if there are more than $n elements"
+        @for $i from 1 through $k {
+          &:nth-last-child(#{$k}):not(:nth-child(#{$i})) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+
+    // Handle the last row as distributed dangling
+    @if $distribute-dangling and not $dangling-at-beginning {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // Calculate the new width:
+        $dangling-width: _get-width($k, $g);
+        // The last element should have right margin reset to 0:
+        &:last-child { margin-right: 0; }
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+            width: $dangling-width;
+          }
+        }
+      }
+    }
+
+    // Handle the first row as distributed dangling
+    @if $distribute-dangling and $dangling-at-beginning {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // Calculate the new width:
+        $dangling-width: _get-width($k, $g);
+        // The last element of the first row should have right margin reset to 0:
+        &:nth-child(#{$k}):nth-last-child(#{$n}n + 1) { margin-right: 0; }
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &:nth-child(#{$inv-i}):nth-last-child(#{$n}n + #{$i}) {
+            width: $dangling-width;
+          }
+        }
+      }
+    }
+
+  }
+}

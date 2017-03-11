@@ -1,0 +1,35 @@
+@import 'true';
+@import '../src/parser';
+
+// Is it me or Sass who's crazy here?
+// How do I do this without... THIS?!
+@function _wrap($list) {
+  $sigh: ();
+  @return append($sigh, $list);
+}
+
+@include test-module('Parser') {
+
+  @include test-module('parse-row') {
+    $test-cases: (
+            'x x x' ((1 0) (1 0) (1 0)),
+            'x-x-x' _wrap(3 0),
+            'x x-x' ((1 0) (2 0)),
+            'x x x-x' ((1 0) (1 0) (2 0)),
+            'x-x   x' ((2 0) (1 1)),
+            '  x-x-x' _wrap(3 1),
+            '    x-x' _wrap(2 2),
+            'x      ' _wrap(1 0),
+            'x' _wrap(1 0),
+    );
+
+    @each $test in $test-cases {
+      @include test('parses "' + first($test) + '"') {
+        $expected: second($test);
+        $actual: _parse-row(first($test));
+        @include assert-equal($expected, $actual);
+      }
+    }
+  }
+
+}

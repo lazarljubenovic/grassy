@@ -1,0 +1,38 @@
+@import 'functional-programming';
+
+@function _sum($acc, $curr) { @return $acc + $curr; }
+
+@function sum($list) { @return _fn-reduce($list, _sum, 0); }
+
+@function _pair-sum($pair) { @return nth($pair, 1) + nth($pair, 2); }
+
+@function sum-of-pairs($list) {
+  $list: _fn-apply($list, _pair-sum);
+  @return sum($list);
+}
+
+// Get first element of the list
+@function first($list) { @return nth($list, 1); }
+
+// Get second element of the list
+@function second($list) { @return nth($list, 2); }
+
+// Get last element of the list
+@function last($list) {@return nth($list, length($list)); }
+
+// Get first n elements of the list
+@function first-n($list, $n) {
+  $new-list: ();
+  @for $i from 1 through $n {
+    $new-list: append($new-list, nth($list, $i), 'space');
+  }
+  @return $new-list;
+}
+
+// Get n-th character from string
+@function _nth-char($string, $n) { @return str-slice($string, $n, $n); }
+
+// Get cell width based on number of cells in a row ($n) and gutter width ($g)
+@function _get-width($n, $g) {
+  @return calc((100% - #{($n - 1) * $g}) / #{$n});
+}

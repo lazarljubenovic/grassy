@@ -1,0 +1,105 @@
+///
+/// Creates a new list with the results of calling a provided function one very item
+/// in this list.
+/// Equivalent to `Array#map` in JavaScript.
+///
+/// @param {List} $list The list which the function is being applied to.
+///
+/// @param {Function} $fn Reference to a function applied to every item.
+/// This function must take two arguments: item and index.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function square($x, $i) { @return $x * $x }
+///   fn-apply(1 2 3 4, square); // 1 4 9 16
+///
+@function _fn-apply($list, $fn) {
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+}
+
+///
+/// Applies a function against an accumulator and each item of the list (from left to
+/// right), to reduce it to a single value.
+/// Equivalent to `Array#reduce` in JavaScript.
+///
+/// @param {List} $list  The list being reduced.
+///
+/// @param {Function} $fn  Reference to a function applied to every item.
+/// This function must take two arguments: accumulated and current value.
+///
+/// @param {*} $initial The initial value of the accumulator, before any items are
+/// visited.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function sum($acc, $curr) { @return $acc + $curr }
+///   fn-apply(1 2 3 4, sum, 0); // 10
+///
+@function _fn-reduce($list, $fn, $initial) {
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+}
+
+///
+/// Creates a new list with all items that pass the test implemented by the provided
+/// function.
+/// Equivalent to `Array#filter` in JavaScript.
+///
+/// @param {List} $list The list being filtered.
+/// @param {Function} $fn Reference to a filtering function.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function aboveTen($x) { @return x > 10 }
+///   fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100
+///
+@function _fn-filter($list, $fn) {
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+}

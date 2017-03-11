@@ -1,0 +1,31 @@
+///
+/// Users can use shorthands because they usually don't want to specify an offset.
+/// This function expands the shorthand syntax to expanded syntax.
+/// @ignore TODO Users can not actually use this syntax yet from their code, fix that
+///
+/// Note that the resulting list is in chained syntax, not global.
+///
+/// @param {List} $list A (partially) shorthand syntax for grid row spec.
+///
+/// @returns {List} The grid row spec in chained extended syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   _shorthand-to-expanded-chained(1 1 2); // (1 0) (1 2) (2 3)
+///
+@function _shorthand-to-expanded-chained($list) {
+  @for $i from 1 through length($list) {
+    $current: nth($list, $i);
+    @if type_of($current) == number {
+      $list: set-nth($list, $i, ($current 0));
+    }
+  }
+  @return $list;
+}

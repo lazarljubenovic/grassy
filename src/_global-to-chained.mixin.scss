@@ -1,0 +1,76 @@
+@import 'util/functional-programming';
+@import 'util/global-utils';
+
+@function _decrement-second($pair, $index) {
+  @return (first($pair) second($pair) - 1);
+}
+
+@function _decrement-second-pair($list) {
+  @return _fn-apply($list, decrement-second);
+}
+
+///
+/// In "global" format, the second number (offset) in the spec pair tells us at which
+/// column does the cell begin. This is the format which is given by the user. This
+/// function transforms that into a "chained" format where the second number (chained
+/// offset) tells us how many cells are supposed to be skipped, relative from the
+/// last known cell.
+///
+/// The algorithm works as follows.
+///
+/// 1. Decrement all offsets.
+/// 2. Subtract "current" offset from the sum of all previous pairs.
+///
+/// @param {List} $list The list global syntax.
+///
+/// @returns {List} The list in chained syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///
+///   'x x x-x'             // ascii visualization (irrelevant in code)
+///   ((1 1) (1 2) (2 3))   // input
+///   ((1 0) (1 0) (2 0))   // output
+///
+///   'x-x   x'             // ascii
+///   ((2 1) (1 4))         // input
+///   ((2 0) (1 1))         // output
+///
+///   '  x-x-x'             // ascii
+///   ((3 2))               // input
+///   ((3 1))               // output
+///
+///
+@function _global-to-chained($list) {
+
+  // First step
+  $list: _decrement-second-pair($list);
+
+  // If list has only one element, that's it (there's no "previous")
+  @if length($list) == 1 {
+    @return $list;
+  }
+
+  // Second step
+  // For each "current" in list...
+  @for $i from 2 through length($list) {
+    // We grab the sum of sum of pairs of previous ones:
+    $current: nth($list, $i);
+    $previous-list: first-n($list, $i - 1);
+    $sum: sum-of-pairs($previous-list);
+    $new-value: second($current) - $sum;
+    $new-pair: (first($current) $new-value);
+    $list: set-nth($list, $i, $new-pair);
+  }
+
+  @return $list;
+
+}
+

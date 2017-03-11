@@ -1,0 +1,182 @@
+@import 'shorthand-to-expanded-syntax';
+@import 'util/global-utils';
+@import 'parser';
+
+///
+/// Use this for more complex grids. You specify the way each row will behave
+/// by an item in the list passed as a first argument, `$spec`. Each row can,
+/// individually, be specified in one of the two syntaxes:
+///   - ASCII-art syntax
+///   - distribute-syntax
+///
+///
+/// **ASCII-art syntax** is designed to help you visualize the resulting grid.
+/// Use it when the grid is complex with different widths and offsets for cells.
+///
+/// **Distribute-syntax** is used to easily create _n_ cells of equal width.
+/// It's very handy when cells are misaligned; for example consider a grid where
+/// the first row has three equal cells, and second row has five equal elements.
+/// Because GCD of 3 and 5 is 15, you'd have to do something like this if you
+/// use only ASCII-art syntax.
+///
+///      'x-x-x-x-x x-x-x-x-x x-x-x-x-x'
+///      'x-x-x x-x-x x-x-x x-x-x x-x-x'
+///
+/// Since this is very cumbersome to work with and doesn't help visualising at all.
+/// Instead, you can do the following.
+///
+///      distribute 3
+///      distribute 5
+///
+/// It simply says that the first row should distribute three, and the second five
+/// cells.
+///
+/// You can also **combine** the two syntaxes. For example, instead of
+///
+///      'x-x x-x'
+///      'x-x-x x'
+///      'x x-x-x'
+///      'x-x x-x'
+///
+/// you can write the following.
+///
+///      distribute 2
+///      'x-x-x x'
+///      'x x-x-x'
+///      distribute 2
+///
+/// Refer to examples for more.
+///
+/// Note that _ASCII art_ comes as a **string** (this is necessary because whitespace is
+/// important), and _distribute_ comes as a **list** of two items, where first item is a
+/// string `distribute` (which you don't have to quote), and second is the number
+/// of elements you want to distribute in the row.
+///
+/// @param {List} $spec The grid specification. See above.
+/// @param {Number} $gutter-width [1em] The distance between two horizontal neighbor
+///        cells.
+/// @param {Number} $gutter-height [$gutter-width] The distance between two vertical
+///        neighbor cells.
+///
+/// @output The properties used to create the specified grid.
+///
+/// @access public
+///
+/// @group Grid API
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example scss A simple ASCII grid
+///   .container {
+///     @include grid((
+///       'x x-x'
+///       'x-x x'
+///     ));
+///   }
+///
+/// @example scss A complex ASCII grid
+///   @include grid((
+///     'x-x-x x-x x'
+///     'x     x x-x'
+///     '      x    '
+///     '  x-x     x'
+///   ));
+///
+/// @example scss Two equivalent grids (demonstrates why `distribute` is handy)
+///   @include grid((
+///     'x-x x-x-x-x x-x-x-x'
+///     'x-x-x-x-x x-x-x-x-x'
+///   ))
+///   @include grid((
+///     'x x-x x-x'
+///     distribute 2
+///   ));
+///
+@mixin grid($spec, $gutter-width: 1em, $gutter-height: $gutter-width) {
+
+  @if type-of($spec) != list {
+    @error "First argument (`$spec`) must be a list.
+    If you are trying to pass in a single item in a list, you have to enclose
+    it in parenthesis and add a trailing comma. In other words, instead of
+    `@include grid(('x'))`, you have to write `@include grid (('x',))`.";
+  }
+
+  $parsed-spec: _fn-apply(_fn-filter($spec, _is-string), _parse-row);
+
+  // We must give these some initial dummy values because of scoping
+  // If they're not re-defined below, they're not going to be used anyway
+  $n: 0;
+  $width: 0;
+  $width-and-gutter: 0;
+
+  // We must check because it's possible that none of the specs were in ASCII-art form
+  @if length($parsed-spec) != 0 {
+    // Get the number of columns
+    $lengths: _fn-apply($parsed-spec, sum-of-pairs);
+    $number-of-columns: max($lengths...);
+
+    // Calculate the width of a cell
+    $n: $number-of-columns;
+    $width: calc((100% - #{($n - 1) * $gutter-width}) / #{$n});
+    $width-and-gutter: calc(#{$width} + #{$gutter-width});
+  }
+
+  $row-index: 0;
+  $cell-in-this-row-index: 0;
+  $cell-index: 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  @each $row in $spec {
+    @if type-of($row) == string {
+      // A string-type spec, in form of 'x-x x'
+      $row: _parse-row($row);
+      $row-index: $row-index + 1;
+      $cell-in-this-row-index: 0;
+      @each $cell in $row {
+        $cell-index: $cell-index + 1;
+        $cell-in-this-row-index: $cell-in-this-row-index + 1;
+        > :nth-child(#{$cell-index}) {
+          width: calc(#{first($cell)} * #{$width-and-gutter} - #{$gutter-width});
+          @if second($cell) != 0 {
+            // Wrapped in @if to avoid useless `margin-left: 0` CSS property
+            margin-left: calc(#{second($cell)} * #{$width-and-gutter});
+          }
+          @if $row-index != length($spec) {
+            // Add bottom margin only if this is not the last row of the grid
+            margin-bottom: $gutter-height;
+          }
+          @if $cell-in-this-row-index != length($row) {
+            // Add right margin only if this is not the last cell in the row
+            margin-right: $gutter-width;
+          }
+        }
+      }
+    } @else if type-of($row) == list {
+      @if first($row) == distribute {
+        // A distribute spec, in form "distribute 5"
+        $row-index: $row-index + 1;
+        @for $distribute-cell-index from 1 through second($row) {
+          $cell-index: $cell-index + 1;
+          > :nth-child(#{$cell-index}) {
+            // All cells have the same width
+            width: calc((100% - #{(second($row) - 1) * $gutter-width}) / #{second($row)});
+            @if $distribute-cell-index != second($row) {
+              // Add margin-right only if it's not the last element in the row
+              margin-right: $gutter-width;
+            }
+            @if $row-index != length($spec) {
+              // Add bottom margin only if this is not the last row of the grid
+              margin-bottom: $gutter-height;
+            }
+          }
+        }
+      } @else {
+        @error Cannot process row $row;
+      }
+    }
+  }
+
+}

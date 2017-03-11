@@ -1,0 +1,132 @@
+@import 'true';
+@import '../src/grid';
+
+@include test-module('Grid') {
+
+  @include test-module('only ASCII art') {
+
+    @include test('simple layout') {
+      @include assert {
+        @include output {
+          @include grid((
+                  'x x-x',
+                  'x-x x',
+          ));
+        }
+        @include expect {
+          display: flex; flex-wrap: wrap;
+          > :nth-child(1) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
+          > :nth-child(2) { width: calc(2 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-bottom: 1em }
+          > :nth-child(3) { width: calc(2 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-right: 1em }
+          > :nth-child(4) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em) }
+        }
+      }
+    }
+
+    @include test('complex layout') {
+      @include assert {
+        @include output {
+          @include grid((
+                  'x-x-x x-x x',
+                  'x     x x-x',
+                  '      x    ',
+                  '  x-x     x',
+          ));
+        }
+        @include expect {
+          display: flex; flex-wrap: wrap;
+          > :nth-child(1) { width: calc(3 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
+          > :nth-child(2) { width: calc(2 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
+          > :nth-child(3) { width: calc(1 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em }
+          > :nth-child(4) { width: calc(1 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
+          > :nth-child(5) { width: calc(1 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-left: calc(2 * calc(calc((100% - 5em) / 6) + 1em)); margin-bottom: 1em; margin-right: 1em }
+          > :nth-child(6) { width: calc(2 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em }
+          > :nth-child(7) { width: calc(1 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-left: calc(3 * calc(calc((100% - 5em) / 6) + 1em)); margin-bottom: 1em }
+          > :nth-child(8) { width: calc(2 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-left: calc(1 * calc(calc((100% - 5em) / 6) + 1em)); margin-right: 1em }
+          > :nth-child(9) { width: calc(1 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-left: calc(2 * calc(calc((100% - 5em) / 6) + 1em)) }
+        }
+      }
+    }
+
+    @include test('single line') {
+      @include assert {
+        @include output {
+          @include grid(('x x x',));
+        }
+        @include expect {
+          display: flex; flex-wrap: wrap;
+          > :nth-child(1) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-right: 1em }
+          > :nth-child(2) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-right: 1em }
+          > :nth-child(3) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em) }
+        }
+      }
+    }
+
+  }
+
+  @include test-module('only distribute') {
+
+    @include test('simple') {
+      @include assert {
+        @include output {
+          @include grid((
+                  distribute 1,
+                  distribute 2,
+                  distribute 5,
+          ));
+        }
+        @include expect {
+          display: flex; flex-wrap: wrap;
+          > :nth-child(1) { width: calc((100% - 0em) / 1); margin-bottom: 1em }
+          > :nth-child(2) { width: calc((100% - 1em) / 2); margin-right: 1em; margin-bottom: 1em }
+          > :nth-child(3) { width: calc((100% - 1em) / 2); margin-bottom: 1em }
+          > :nth-child(4) { width: calc((100% - 4em) / 5); margin-right: 1em }
+          > :nth-child(5) { width: calc((100% - 4em) / 5); margin-right: 1em }
+          > :nth-child(6) { width: calc((100% - 4em) / 5); margin-right: 1em }
+          > :nth-child(7) { width: calc((100% - 4em) / 5); margin-right: 1em }
+          > :nth-child(8) { width: calc((100% - 4em) / 5) }
+        }
+      }
+    }
+
+    @include test('single line') {
+      @include assert {
+        @include output {
+          @include grid((
+                  distribute 2,
+          ));
+        }
+        @include expect {
+          display: flex; flex-wrap: wrap;
+          > :nth-child(1) { width: calc((100% - 1em) / 2); margin-right: 1em }
+          > :nth-child(2) { width: calc((100% - 1em) / 2) }
+        }
+      }
+    }
+
+  }
+
+  @include test-module('combination of distribute- and ascii-art-syntax') {
+
+    @include test('simple combination') {
+      @include assert {
+        @include output {
+          @include grid((
+                  'x x-x x-x',
+                  distribute 2,
+          ));
+        }
+        @include expect {
+          display: flex; flex-wrap: wrap;
+          > :nth-child(1) { width: calc(1 * calc(calc((100% - 4em) / 5) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
+          > :nth-child(2) { width: calc(2 * calc(calc((100% - 4em) / 5) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
+          > :nth-child(3) { width: calc(2 * calc(calc((100% - 4em) / 5) + 1em) - 1em); margin-bottom: 1em }
+          > :nth-child(4) { width: calc((100% - 1em) / 2); margin-right: 1em }
+          > :nth-child(5) { width: calc((100% - 1em) / 2) }
+        }
+      }
+    }
+
+  }
+
+}

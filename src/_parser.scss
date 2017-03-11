@@ -1,0 +1,104 @@
+@import 'util/global-utils';
+
+///
+/// Parses a single row of string-based spec (in form of characters 'x', '-' and ' '),
+/// giving chained syntax as output.
+///
+/// It currently has to receive a fictional second argument which is unused due to Sass
+/// limitation of dynamically figuring out the number of arguments a function expects.
+///
+/// @param {String} $input - A string which represents the ASCII specification for a
+/// single row of a grid. For example, `x-x-x x' or 'x   x'. Note that the string must be
+/// quotes because it contains whitespaces (sometimes even several in a row, which is
+/// important for constructing the grid). This information would be lost if the string
+/// was unquoted.
+///
+/// @returns {List} A specification of the row in chained syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example scss
+///   $row: 'x x x';
+///   parse-row($row, 0); // (1 0) (1 0) (1 0)
+///                       // All elements have one "unit" width, and no offset from
+///                       // the previous element.
+///
+/// @example scss
+///   $row: 'x-x x';
+///   parse-row($row, 0); // (2 0) (1 0)
+///                       // The first element is two units, the second one unit.
+///
+/// @example scss
+///   $row: 'x   x-x';
+///   parse-row($row, 0); // (1 0) (2 1)
+///                       // The first element is one unit. The second element is two
+///                       // units, offset by one unit from the previous element.
+///
+@function _parse-row($input) {
+
+  @if str-length($input) == 0 {
+    @error 'Parsing empty string';
+    @return ();
+  }
+
+  $span-acc: 0; // accumulated value of how much the element is wide
+  $offset-acc: 0; // accumulated value of how much the element is offset from the previous
+  $result: (); // the result will be appended here and returned in the end
+  $token: _nth-char($input, 1); // the current token, initialized as first token
+
+  // The first token is treated differently because of no previous token and specific
+  // rules for the first token.
+  @if $token == 'x' {
+    $span-acc: 1;
+  } @else if $token == ' ' {
+    $offset-acc: 1;
+  } @else {
+    @error 'A row cannot being with "-".';
+  }
+
+  $previous-token: $token;
+
+  @if 2 <= str-length($input) {
+    @for $i from 2 through str-length($input) {
+      $token: _nth-char($input, $i);
+
+      // State machine
+      @if $previous-token == 'x' and $token == ' ' {
+        $result: append($result, ($span-acc $offset-acc / 2));
+        $span-acc: 0;
+        $offset-acc: 0;
+      } @else if $previous-token == 'x' and $token == '-' {
+        // do nothing
+      } @else if $previous-token == ' ' and $token == ' ' {
+        $offset-acc: $offset-acc + 1;
+      } @else if $previous-token == ' ' and $token == 'x' {
+        $span-acc: 1;
+      } @else if $previous-token == '-' and $token == 'x' {
+        $span-acc: $span-acc + 1;
+      } @else {
+        @error 'Parsing error. Unexpected token after "' + $previous-token + '": "' + $token + '".';
+      }
+
+      $previous-token: $token;
+    }
+  }
+
+  @if $previous-token == '-' {
+    @error 'A row cannot end with "-".';
+  }
+
+  @if $span-acc > 0 {
+    $result: append($result, ($span-acc $offset-acc / 2));
+  }
+  @return $result;
+}
+
+@function _is-string($something) {
+  @return type-of($something) == string;
+}

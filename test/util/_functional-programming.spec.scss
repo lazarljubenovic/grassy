@@ -1,0 +1,77 @@
+@import '../true';
+@import '../../src/util/_functional-programming.scss';
+
+@function __test-sqr($x) { @return $x * $x }
+
+@function __test-sum($acc, $curr) { @return $acc + $curr }
+
+@function __test-flatten($acc, $curr) { @return join($acc, $curr) }
+
+@function __test-above-ten($x) { @return $x > 10 }
+
+@include test-module('Functional programming') {
+
+  @include test-module('fn-apply') {
+    @include test('applies a function to every element') {
+      $a-list: 1 2 3 4;
+      $actual: _fn-apply($a-list, __test-sqr);
+      $expected: 1 4 9 16;
+      @include assert-equal($actual, $expected);
+    }
+    @include test('works when list has only one element') {
+      $a-list: (-2,);
+      $actual: _fn-apply($a-list, __test-sqr);
+      $expected: (4,);
+      @include assert-equal($actual, $expected);
+    }
+    @include test('works with an empty list') {
+      $empty-list: ();
+      $actual: _fn-apply($empty-list, __test-sqrt);
+      $expected: ();
+      @include assert-equal($actual, $expected);
+    }
+  }
+
+  @include test-module('fn-reduce') {
+    @include test('reduces a list given a function (sum)') {
+      $a-list: 1 3 6;
+      $actual: _fn-reduce($a-list, __test-sum, 0);
+      $expected: 10;
+      @include assert-equal($actual, $expected);
+    }
+    @include test('reduces a list given a function (flatten)') {
+      $a-list: 1 1, 2 2, 3 3, 4 4;
+      $actual: _fn-reduce($a-list, __test-flatten, ());
+      $expected: 1 1 2 2 3 3 4 4;
+      @include assert-equal($actual, $expected);
+    }
+    @include test('works with empty list') {
+      $empty-list: ();
+      $actual: _fn-reduce($empty-list, __test-sum, 0);
+      $expected: 0;
+      @include assert-equal($actual, $expected);
+    }
+  }
+
+  @include test-module('fn-filter') {
+    @include test('filters a list based on predicate') {
+      $a-list: 1 4 10 100 300 5 20;
+      $actual: _fn-filter($a-list, __test-above-ten);
+      $expected: 100 300 20;
+      @include assert-equal($actual, $expected);
+    }
+    @include test('works with empty list') {
+      $a-list: ();
+      $actual: _fn-filter($a-list, __test-above-ten);
+      $expected: ();
+      @include assert-equal($actual, $expected);
+    }
+    @include test('works when result is empty list') {
+      $a-list: 1 2 3;
+      $actual: _fn-filter($a-list, __test-above-ten);
+      $expected: ();
+      @include assert-equal($actual, $expected);
+    }
+  }
+
+}

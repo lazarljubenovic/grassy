@@ -1,0 +1,24 @@
+{
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "node-sass": "^4.5.0",
+    "nodemon": "^1.11.0",
+    "sass-true": "^2.2.1",
+    "sassdoc": "^2.2.0"
+  },
+  "scripts": {
+    "build-sass": "node-sass --output-style compressed ./src -o ./src",
+    "watch-sass": "nodemon -e scss -x \"yarn build-sass\"",
+    "watch": "yarn watch-sass",
+    "test": "mocha",
+    "docs": "sassdoc src"
+  },
+  "name": "grassy",
+  "version": "0.1.0",
+  "description": "Build HTML layout through ASCII art in Sass.",
+  "main": "grassy.scss",
+  "repository": "https://github.com/lazarljubenovic/grassy/",
+  "author": "Lazar Ljubenović",
+  "license": "MIT",
+  "dependencies": {}
+}

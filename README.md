@@ -2,6 +2,16 @@
 
 Build layout through ASCII art in Sass (and more).
 
+## Installation and Usage
+
+```
+yarn add grassy -D
+```
+
+```scss
+@import "node_modules/grassy/grassy";
+```
+
 ## Quick overview
 
 ### ASCII art

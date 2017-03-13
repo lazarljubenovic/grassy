@@ -1,6 +1,6 @@
 # Grassy
 
-Build layout through ASCII art in Sass (and more!).
+Build layout through ASCII art in Sass (and more).
 
 ## Quick overview
 
@@ -18,10 +18,10 @@ HTML:
 Sass:
 ```scss
 section {
-  @include grid(
-    'x-x'
-    'x x'
-  );
+  @include grid((
+    'x-x',
+    'x x',
+  ));
 }
 ```
 
@@ -33,10 +33,10 @@ Result:
 
 ```scss
 section {
-  @include grid(
-    'x-x x x'
-     distribute 7
-  );
+  @include grid((
+    'x-x x x',
+     distribute 7,
+  ));
 }
 ```
 
@@ -68,7 +68,7 @@ section {
   @include fixed-grid(
     3,
     $distribute-dangling: true,
-    $dangling-at-beginning: true
+    $dangling-at-beginning: true,
   );
 }
 ```
@@ -85,7 +85,7 @@ section {
 
 ---
 
-This is still in rapid development phase. There might be breaking changes along way. For this reason, I advise you not to use this in serious projects. However, to find (and fix) bugs, people have to use it _somewhere_. So if you have a suitable non-critical project, it would be awesome if you could try out Grassy.
+This is still in rapid development phase. There might be breaking changes along the way. For this reason, I advise you not to use this in serious projects. However, to find (and fix) bugs, people have to use it _somewhere_. So if you have a suitable non-critical project, it would be awesome if you could try out Grassy.
 
 Please report bugs and suggest ideas by [opening an issue](https://github.com/lazarljubenovic/grassy/issues).
 

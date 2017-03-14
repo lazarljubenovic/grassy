@@ -39,7 +39,25 @@ Result:
 
 ![A grid with two columns. The first column has one cell; the second column has two cells.](http://i.imgur.com/PUcHQDP.png)
 
-### A handy `distribute $x` syntax
+### As complex as you like!
+
+HTML _never_ requires any additional classes, wrappers, etc.
+
+```scss
+@include grid(
+  'x-x-x x   x'
+  'x   x-x-x-x'
+  '    x-x   x'
+  '  x   x-x  '
+);
+```
+
+![](http://i.imgur.com/a34WVe3.png)
+
+
+### `distribute` syntax
+
+Don't lose count of your `x`s! Freely combine `distribute` with your ASCII art.
 
 ```scss
 section {
@@ -54,6 +72,8 @@ section {
 
 ### Quick `n`-column layouts
 
+As basic as it gets.
+
 ```scss
 section {
   @include fixed-grid(3);
@@ -61,6 +81,10 @@ section {
 ```
 
 ![](http://i.imgur.com/7H4ZkhR.png)
+
+### Don't like dangling elements?
+
+Just tell Grassy to distribute dangling elements.
 
 ```scss
 section {
@@ -72,6 +96,8 @@ section {
 ```
 
 ![](http://i.imgur.com/Smfu3M0.png)
+
+Or distribute them at the top if you prefer it that way.
 
 ```scss
 section {
@@ -85,7 +111,7 @@ section {
 
 ![](http://i.imgur.com/ChX2HVE.png)
 
-Also take a look at [full documentation](https://lazarljubenovic.github.io/grassy/).
+Also take a look at [full documentation](https://lazarljubenovic.github.io/grassy/). (Includes both the public API and explanation of some internal functions to help you if you want to contribute but have no idea where to start from.)
 
 ## Why Grassy?
 
@@ -95,9 +121,11 @@ Also take a look at [full documentation](https://lazarljubenovic.github.io/grass
 - Great for generated content.
 - Zero runtime dependencies.
 
+More coming [soon™©®](https://github.com/lazarljubenovic/grassy/issues?q=is%3Aissue+is%3Aopen+label%3A%22future+plans%22).
+
 ---
 
-This is still in rapid development phase. There might be breaking changes along the way. For this reason, I advise you not to use this in serious projects. However, to find (and fix) bugs, people have to use it _somewhere_. So if you have a suitable non-critical project, it would be awesome if you could try out Grassy.
+**NOTE** This is still in rapid development phase. There might be breaking changes along the way. For this reason, I advise you not to use this in serious projects. However, to find (and fix) bugs, people have to use it _somewhere_. So if you have a suitable non-critical project, it would be awesome if you could try out Grassy.
 
 Please report bugs and suggest ideas by [opening an issue](https://github.com/lazarljubenovic/grassy/issues).
 

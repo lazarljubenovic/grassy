@@ -4,14 +4,16 @@
     "node-sass": "^4.5.0",
     "nodemon": "^1.11.0",
     "sass-true": "^2.2.1",
-    "sassdoc": "^2.2.0"
+    "sassdoc": "^2.2.0",
+    "sassdocify": "^0.3.4"
   },
   "scripts": {
     "build-sass": "node-sass --output-style compressed ./src -o ./src",
     "watch-sass": "nodemon -e scss -x \"yarn build-sass\"",
     "watch": "yarn watch-sass",
     "test": "mocha",
-    "docs": "sassdoc src"
+    "docs": "sassdoc src",
+    "sassdocify": "sassdocify src"
   },
   "name": "grassy",
   "version": "0.1.0",

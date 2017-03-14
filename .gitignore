@@ -5,3 +5,5 @@ src/main.css
 src/main.css.map
 node_modules/
 sassdoc/
+.sassdoc/
+.pages/

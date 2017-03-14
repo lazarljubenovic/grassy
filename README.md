@@ -1,4 +1,4 @@
-# Grassy
+# Grassy | [Docs](https://lazarljubenovic.github.io/grassy/)
 
 Build layout through ASCII art in Sass (and more).
 
@@ -84,6 +84,8 @@ section {
 ```
 
 ![](http://i.imgur.com/ChX2HVE.png)
+
+Also take a look at [full documentation](https://lazarljubenovic.github.io/grassy/).
 
 ## Why Grassy?
 

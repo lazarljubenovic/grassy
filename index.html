@@ -1,0 +1,359 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Grassy - v0.1.0</title><link rel="stylesheet" href="assets/css/main.css"><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700" rel="stylesheet" type="text/css"><meta name="viewport" content="width=device-width"><meta content="IE=edge, chrome=1" http-equiv="X-UA-Compatible"><!-- Open Graph tags --><meta property="og:title" content="Grassy - SassDoc"><meta property="og:type" content="website"><meta property="og:description" content="<p>Build HTML layout through ASCII art in Sass.</p>
+"><!-- Thanks to Sass-lang.com for the icons --><link href="assets/images/favicon.png" rel="shortcut icon"></head><body><aside class="sidebar" role="nav"><div class="sidebar__header"><h1 class="sidebar__title">Grassy - 0.1.0</h1></div><div class="sidebar__body"><button type="button" class="btn-toggle js-btn-toggle" data-alt="Open all">Close all</button><p class="sidebar__item sidebar__item--heading" data-slug="grid api"><a href="#grid api">grid api</a></p><div><p class="sidebar__item sidebar__item--sub-heading" data-slug="grid api-mixin"><a href="#grid api-mixin">mixins</a></p><ul class="list-unstyled"><li class="sidebar__item sassdoc__item" data-group="grid api" data-name="fixed-grid" data-type="mixin"><a href="#grid api-mixin-fixed-grid">fixed-grid</a></li><li class="sidebar__item sassdoc__item" data-group="grid api" data-name="grid" data-type="mixin"><a href="#grid api-mixin-grid">grid</a></li></ul></div><p class="sidebar__item sidebar__item--heading" data-slug="internal"><a href="#internal">internal</a></p><div><p class="sidebar__item sidebar__item--sub-heading" data-slug="internal-function"><a href="#internal-function">functions</a></p><ul class="list-unstyled"><li class="sidebar__item sassdoc__item" data-group="internal" data-name="_global-to-chained" data-type="function"><a href="#internal-function-_global-to-chained">_global-to-chained</a></li><li class="sidebar__item sassdoc__item" data-group="internal" data-name="_parse-row" data-type="function"><a href="#internal-function-_parse-row">_parse-row</a></li><li class="sidebar__item sassdoc__item" data-group="internal" data-name="_shorthand-to-expanded-chained" data-type="function"><a href="#internal-function-_shorthand-to-expanded-chained">_shorthand-to-expanded-chained</a></li></ul></div><p class="sidebar__item sidebar__item--heading" data-slug="internal util"><a href="#internal util">internal util</a></p><div><p class="sidebar__item sidebar__item--sub-heading" data-slug="internal util-function"><a href="#internal util-function">functions</a></p><ul class="list-unstyled"><li class="sidebar__item sassdoc__item" data-group="internal util" data-name="_fn-apply" data-type="function"><a href="#internal util-function-_fn-apply">_fn-apply</a></li><li class="sidebar__item sassdoc__item" data-group="internal util" data-name="_fn-reduce" data-type="function"><a href="#internal util-function-_fn-reduce">_fn-reduce</a></li><li class="sidebar__item sassdoc__item" data-group="internal util" data-name="_fn-filter" data-type="function"><a href="#internal util-function-_fn-filter">_fn-filter</a></li></ul></div></div></aside><article class="main" role="main"><header class="header" role="banner"><div class="container"><div class="sassdoc__searchbar searchbar"><label for="js-search-input" class="visually-hidden">Search</label><div class="searchbar__form" id="js-search"><input name="search" type="search" class="searchbar__field" autocomplete="off" autofocus id="js-search-input" placeholder="Search"><ul class="searchbar__suggestions" id="js-search-suggestions"></ul></div></div></div></header><section class="main__section"><h1 class="main__heading" id="grid api"><div class="container">grid api</div></h1><section class="main__sub-section" id="grid api-mixin"><h2 class="main__heading--secondary"><div class="container">mixins</div></h2><section class="main__item container item" id="grid api-mixin-fixed-grid"><h3 class="item__heading"><a class="item__name" href="#mixin-fixed-grid">fixed-grid</a></h3><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@mixin fixed-grid($number-of-columns, $gutter-width: 1em, $gutter-height: $gutter-height, $distribute-dangling, $dangling-at-beginning) { 
+  $n: $number-of-columns;
+  $g: $gutter-width;
+  $width: _get-width($n, $g);
+  display: flex;
+  flex-wrap: wrap;
+
+  &gt; * {
+    width: $width;
+    margin-bottom: $gutter-height;
+
+    @if not $dangling-at-beginning {
+      &amp;:not(:nth-child(#{$n}n)) {
+        margin-right: $g;
+      }
+    } @else {
+      &amp;:not(:nth-last-child(#{$n}n + 1)) {
+        margin-right: $g;
+      }
+    }
+
+    // Handle the bottom-margin of last row
+    // This depends on do we know that there will be dangling elements or not
+    @if not $assume-no-dangling-elements {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &amp;:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    } @else {
+      // We don&#39;t need to loop over every possible number of dangling elements since
+      // we know that it&#39;s always equal to $n.
+      @for $i from 1 through $n {
+        &amp;:nth-last-child(#{$i}) {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    // If dangling elements are at the top, that means that the bottom row will always be
+    // filled completely. In this case we want to reset those elements&#39; bottom margin to 0,
+    // however only if there are more than $n elements in the container:
+    @if $dangling-at-beginning {
+      // For every possible number of dangling elements (at the top):
+      @for $k from 1 through $n {
+        // An inner loop to handle &quot;however only if there are more than $n elements&quot;
+        @for $i from 1 through $k {
+          &amp;:nth-last-child(#{$k}):not(:nth-child(#{$i})) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+
+    // Handle the last row as distributed dangling
+    @if $distribute-dangling and not $dangling-at-beginning {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // Calculate the new width:
+        $dangling-width: _get-width($k, $g);
+        // The last element should have right margin reset to 0:
+        &amp;:last-child { margin-right: 0; }
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &amp;:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+            width: $dangling-width;
+          }
+        }
+      }
+    }
+
+    // Handle the first row as distributed dangling
+    @if $distribute-dangling and $dangling-at-beginning {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // Calculate the new width:
+        $dangling-width: _get-width($k, $g);
+        // The last element of the first row should have right margin reset to 0:
+        &amp;:nth-child(#{$k}):nth-last-child(#{$n}n + 1) { margin-right: 0; }
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &amp;:nth-child(#{$inv-i}):nth-last-child(#{$n}n + #{$i}) {
+            width: $dangling-width;
+          }
+        }
+      }
+    }
+
+  }
+ }" data-collapsed="@mixin fixed-grid($number-of-columns, $gutter-width: 1em, $gutter-height: $gutter-height, $distribute-dangling, $dangling-at-beginning) { ... }"><code>@mixin fixed-grid($number-of-columns, $gutter-width: 1em, $gutter-height: $gutter-height, $distribute-dangling, $dangling-at-beginning) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Use this when you know the number of columns. All cells are always of equal width (with exception of the last or first column in combination with some flags). You are not in charge of cell sizes; you can only influence the gutter width.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$number-of-columns</code></th><td data-label="desc"><p>The number of columns the grid will have.</p></td><td data-label="type"><code>Number</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$gutter-width</code></th><td data-label="desc"><p>The distance between two horizontal neighbor cells.</p></td><td data-label="type"><code>Number</code></td><td data-label="default"><code>1em</code></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$gutter-height</code></th><td data-label="desc"><p>The distance between two vertical neighbor cells.</p></td><td data-label="type"><code>Number</code></td><td data-label="default"><code>$gutter-height</code></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$distribute-dangling</code></th><td data-label="desc"><p>When there are not enough elements in the last column, they are left dangling to the left, making the grid uneven. By setting this parameter to <code>true</code>, you can force the grid to make the dangling elements in the last column wider.</p><p>In you&#39;d prefer this to happen in the first column, check out <code>$dangling-at-beginning</code>.</p></td><td data-label="type"><code>Boolean</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$dangling-at-beginning</code></th><td data-label="desc"><p>By default, dangling elements are at the bottom of the grid. If this flag is set, the dangling elements considered to be the ones at the first row of the grid.</p><p>This flag makes sense only if <code>$distribute-dangling</code> is set to true.</p></td><td data-label="type"><code>Boolean</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr></tbody></table><h3 class="item__sub-heading">Example</h3><div class="item__example example"><div class="example__description"><p>The basic usage</p></div><pre class="example__code language-scss"><code>@include fixed-grid(3);
+// with 6 elements    with 5 elements    with 4 elements
+// x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+// x-x x-x x-x        x-x x-x            x-x</code></pre></div><div class="item__example example"><div class="example__description"><p>Handling dangling elements</p></div><pre class="example__code language-scss"><code>@include fixed-grid(3, $distribute-dangling: true);
+// with 6 elements    with 5 elements    with 4 elements
+// x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+// x-x x-x x-x        x-x-x x-x-x        x-x-x-x-x-x</code></pre></div><div class="item__example example"><div class="example__description"><p>Handling dangling element (at top)</p></div><pre class="example__code language-scss"><code>@include fixed-grid(3, $distribute-dangling: true);
+// with 6 elements    with 5 elements    with 4 elements
+// x-x x-x x-x        x-x-x x-x-x        x-x-x-x-x-x
+// x-x x-x x-x        x-x x-x x-x        x-x x-x x-x</code></pre></div><h3 class="item__sub-heading">Output</h3><div class="item__description"><p>The CSS properties necessary for making the grid look the specified way.</p></div><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section><section class="main__item container item" id="grid api-mixin-grid"><h3 class="item__heading"><a class="item__name" href="#mixin-grid">grid</a></h3><span class="item__since">Since 0.1.0</span><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@mixin grid($spec, $gutter-width: 1em, $gutter-height: $gutter-width) { 
+
+  @if type-of($spec) != list {
+    @error &quot;First argument (`$spec`) must be a list.
+    If you are trying to pass in a single item in a list, you have to enclose
+    it in parenthesis and add a trailing comma. In other words, instead of
+    `@include grid((&#39;x&#39;))`, you have to write `@include grid ((&#39;x&#39;,))`.&quot;;
+  }
+
+  $parsed-spec: _fn-apply(_fn-filter($spec, _is-string), _parse-row);
+
+  // We must give these some initial dummy values because of scoping
+  // If they&#39;re not re-defined below, they&#39;re not going to be used anyway
+  $n: 0;
+  $width: 0;
+  $width-and-gutter: 0;
+
+  // We must check because it&#39;s possible that none of the specs were in ASCII-art form
+  @if length($parsed-spec) != 0 {
+    // Get the number of columns
+    $lengths: _fn-apply($parsed-spec, sum-of-pairs);
+    $number-of-columns: max($lengths...);
+
+    // Calculate the width of a cell
+    $n: $number-of-columns;
+    $width: calc((100% - #{($n - 1) * $gutter-width}) / #{$n});
+    $width-and-gutter: calc(#{$width} + #{$gutter-width});
+  }
+
+  $row-index: 0;
+  $cell-in-this-row-index: 0;
+  $cell-index: 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  @each $row in $spec {
+    @if type-of($row) == string {
+      // A string-type spec, in form of &#39;x-x x&#39;
+      $row: _parse-row($row);
+      $row-index: $row-index + 1;
+      $cell-in-this-row-index: 0;
+      @each $cell in $row {
+        $cell-index: $cell-index + 1;
+        $cell-in-this-row-index: $cell-in-this-row-index + 1;
+        &gt; :nth-child(#{$cell-index}) {
+          width: calc(#{first($cell)} * #{$width-and-gutter} - #{$gutter-width});
+          @if second($cell) != 0 {
+            // Wrapped in @if to avoid useless `margin-left: 0` CSS property
+            margin-left: calc(#{second($cell)} * #{$width-and-gutter});
+          }
+          @if $row-index != length($spec) {
+            // Add bottom margin only if this is not the last row of the grid
+            margin-bottom: $gutter-height;
+          }
+          @if $cell-in-this-row-index != length($row) {
+            // Add right margin only if this is not the last cell in the row
+            margin-right: $gutter-width;
+          }
+        }
+      }
+    } @else if type-of($row) == list {
+      @if first($row) == distribute {
+        // A distribute spec, in form &quot;distribute 5&quot;
+        $row-index: $row-index + 1;
+        @for $distribute-cell-index from 1 through second($row) {
+          $cell-index: $cell-index + 1;
+          &gt; :nth-child(#{$cell-index}) {
+            // All cells have the same width
+            width: calc((100% - #{(second($row) - 1) * $gutter-width}) / #{second($row)});
+            @if $distribute-cell-index != second($row) {
+              // Add margin-right only if it&#39;s not the last element in the row
+              margin-right: $gutter-width;
+            }
+            @if $row-index != length($spec) {
+              // Add bottom margin only if this is not the last row of the grid
+              margin-bottom: $gutter-height;
+            }
+          }
+        }
+      } @else {
+        @error Cannot process row $row;
+      }
+    }
+  }
+
+ }" data-collapsed="@mixin grid($spec, $gutter-width: 1em, $gutter-height: $gutter-width) { ... }"><code>@mixin grid($spec, $gutter-width: 1em, $gutter-height: $gutter-width) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Use this for more complex grids. You specify the way each row will behave by an item in the list passed as a first argument, <code>$spec</code>. Each row can, individually, be specified in one of the two syntaxes:</p><ul><li>ASCII-art syntax</li><li>distribute-syntax</li></ul><p><strong>ASCII-art syntax</strong> is designed to help you visualize the resulting grid. Use it when the grid is complex with different widths and offsets for cells.</p><p><strong>Distribute-syntax</strong> is used to easily create <em>n</em> cells of equal width. It&#39;s very handy when cells are misaligned; for example consider a grid where the first row has three equal cells, and second row has five equal elements. Because GCD of 3 and 5 is 15, you&#39;d have to do something like this if you use only ASCII-art syntax.</p><pre><code> &#39;x-x-x-x-x x-x-x-x-x x-x-x-x-x&#39;
+ &#39;x-x-x x-x-x x-x-x x-x-x x-x-x&#39;
+</code></pre><p>Since this is very cumbersome to work with and doesn&#39;t help visualising at all. Instead, you can do the following.</p><pre><code> distribute 3
+ distribute 5
+</code></pre><p>It simply says that the first row should distribute three, and the second five cells.</p><p>You can also <strong>combine</strong> the two syntaxes. For example, instead of</p><pre><code> &#39;x-x x-x&#39;
+ &#39;x-x-x x&#39;
+ &#39;x x-x-x&#39;
+ &#39;x-x x-x&#39;
+</code></pre><p>you can write the following.</p><pre><code> distribute 2
+ &#39;x-x-x x&#39;
+ &#39;x x-x-x&#39;
+ distribute 2
+</code></pre><p>Refer to examples for more.</p><p>Note that <em>ASCII art</em> comes as a <strong>string</strong> (this is necessary because whitespace is important), and <em>distribute</em> comes as a <strong>list</strong> of two items, where first item is a string <code>distribute</code> (which you don&#39;t have to quote), and second is the number of elements you want to distribute in the row.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$spec</code></th><td data-label="desc"><p>The grid specification. See above.</p></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$gutter-width</code></th><td data-label="desc"><p>The distance between two horizontal neighbor cells.</p></td><td data-label="type"><code>Number</code></td><td data-label="default"><code>1em</code></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$gutter-height</code></th><td data-label="desc"><p>The distance between two vertical neighbor cells.</p></td><td data-label="type"><code>Number</code></td><td data-label="default"><code>$gutter-width</code></td></tr></tbody></table><h3 class="item__sub-heading">Example</h3><div class="item__example example"><div class="example__description"><p>A simple ASCII grid</p></div><pre class="example__code language-scss"><code>.container {
+  @include grid((
+    &#39;x x-x&#39;
+    &#39;x-x x&#39;
+  ));
+}</code></pre></div><div class="item__example example"><div class="example__description"><p>A complex ASCII grid</p></div><pre class="example__code language-scss"><code>@include grid((
+  &#39;x-x-x x-x x&#39;
+  &#39;x     x x-x&#39;
+  &#39;      x    &#39;
+  &#39;  x-x     x&#39;
+));</code></pre></div><div class="item__example example"><div class="example__description"><p>Two equivalent grids (demonstrates why <code>distribute</code> is handy)</p></div><pre class="example__code language-scss"><code>@include grid((
+  &#39;x-x x-x-x-x x-x-x-x&#39;
+  &#39;x-x-x-x-x x-x-x-x-x&#39;
+))
+@include grid((
+  &#39;x x-x x-x&#39;
+  distribute 2
+));</code></pre></div><h3 class="item__sub-heading">Output</h3><div class="item__description"><p>The properties used to create the specified grid.</p></div><h3 class="item__sub-heading">Throws</h3><ul class="list-unstyled"><li><p>First argument (<code>$spec</code>) must be a list. If you are trying to pass in a single item in a list, you have to enclose it in parenthesis and add a trailing comma. In other words, instead of `@include grid((</p></li></ul><h3 class="item__sub-heading">Requires</h3><ul class="list-unstyled"><li class="item__description item__description--inline"><span class="item__cross-type">[function]</span> <a href="#internal util-function-_fn-apply"><code>_fn-apply</code></a></li><li class="item__description item__description--inline"><span class="item__cross-type">[function]</span> <a href="#internal util-function-_fn-filter"><code>_fn-filter</code></a></li><li class="item__description item__description--inline"><span class="item__cross-type">[function]</span> <a href="#internal util-function-_fn-apply"><code>_fn-apply</code></a></li><li class="item__description item__description--inline"><span class="item__cross-type">[function]</span> <a href="#internal-function-_parse-row"><code>_parse-row</code></a></li></ul><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section></section></section><section class="main__section"><h1 class="main__heading" id="internal"><div class="container">internal</div></h1><section class="main__sub-section" id="internal-function"><h2 class="main__heading--secondary"><div class="container">functions</div></h2><section class="main__item container item" id="internal-function-_global-to-chained"><h3 class="item__heading"><span class="item__access">[private]</span> <a class="item__name" href="#function-_global-to-chained">_global-to-chained</a></h3><span class="item__since">Since 0.1.0</span><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function _global-to-chained($list) { 
+
+  // First step
+  $list: _decrement-second-pair($list);
+
+  // If list has only one element, that&#39;s it (there&#39;s no &quot;previous&quot;)
+  @if length($list) == 1 {
+    @return $list;
+  }
+
+  // Second step
+  // For each &quot;current&quot; in list...
+  @for $i from 2 through length($list) {
+    // We grab the sum of sum of pairs of previous ones:
+    $current: nth($list, $i);
+    $previous-list: first-n($list, $i - 1);
+    $sum: sum-of-pairs($previous-list);
+    $new-value: second($current) - $sum;
+    $new-pair: (first($current) $new-value);
+    $list: set-nth($list, $i, $new-pair);
+  }
+
+  @return $list;
+
+ }" data-collapsed="@function _global-to-chained($list) { ... }"><code>@function _global-to-chained($list) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>In &quot;global&quot; format, the second number (offset) in the spec pair tells us at which column does the cell begin. This is the format which is given by the user. This function transforms that into a &quot;chained&quot; format where the second number (chained offset) tells us how many cells are supposed to be skipped, relative from the last known cell.</p><p>The algorithm works as follows.</p><ol><li>Decrement all offsets.</li><li>Subtract &quot;current&quot; offset from the sum of all previous pairs.</li></ol></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$list</code></th><td data-label="desc"><p>The list global syntax.</p></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>List</code> &mdash;<p>The list in chained syntax.</p></div><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>
+&#39;x x x-x&#39;             // ascii visualization (irrelevant in code)
+((1 1) (1 2) (2 3))   // input
+((1 0) (1 0) (2 0))   // output
+
+&#39;x-x   x&#39;             // ascii
+((2 1) (1 4))         // input
+((2 0) (1 1))         // output
+
+&#39;  x-x-x&#39;             // ascii
+((3 2))               // input
+((3 1))               // output</code></pre></div><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section><section class="main__item container item" id="internal-function-_parse-row"><h3 class="item__heading"><span class="item__access">[private]</span> <a class="item__name" href="#function-_parse-row">_parse-row</a></h3><span class="item__since">Since 0.1.0</span><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function _parse-row($input) { 
+
+  @if str-length($input) == 0 {
+    @error &#39;Parsing empty string&#39;;
+    @return ();
+  }
+
+  $span-acc: 0; // accumulated value of how much the element is wide
+  $offset-acc: 0; // accumulated value of how much the element is offset from the previous
+  $result: (); // the result will be appended here and returned in the end
+  $token: _nth-char($input, 1); // the current token, initialized as first token
+
+  // The first token is treated differently because of no previous token and specific
+  // rules for the first token.
+  @if $token == &#39;x&#39; {
+    $span-acc: 1;
+  } @else if $token == &#39; &#39; {
+    $offset-acc: 1;
+  } @else {
+    @error &#39;A row cannot being with &quot;-&quot;.&#39;;
+  }
+
+  $previous-token: $token;
+
+  @if 2 &lt;= str-length($input) {
+    @for $i from 2 through str-length($input) {
+      $token: _nth-char($input, $i);
+
+      // State machine
+      @if $previous-token == &#39;x&#39; and $token == &#39; &#39; {
+        $result: append($result, ($span-acc $offset-acc / 2));
+        $span-acc: 0;
+        $offset-acc: 0;
+      } @else if $previous-token == &#39;x&#39; and $token == &#39;-&#39; {
+        // do nothing
+      } @else if $previous-token == &#39; &#39; and $token == &#39; &#39; {
+        $offset-acc: $offset-acc + 1;
+      } @else if $previous-token == &#39; &#39; and $token == &#39;x&#39; {
+        $span-acc: 1;
+      } @else if $previous-token == &#39;-&#39; and $token == &#39;x&#39; {
+        $span-acc: $span-acc + 1;
+      } @else {
+        @error &#39;Parsing error. Unexpected token after &quot;&#39; + $previous-token + &#39;&quot;: &quot;&#39; + $token + &#39;&quot;.&#39;;
+      }
+
+      $previous-token: $token;
+    }
+  }
+
+  @if $previous-token == &#39;-&#39; {
+    @error &#39;A row cannot end with &quot;-&quot;.&#39;;
+  }
+
+  @if $span-acc &gt; 0 {
+    $result: append($result, ($span-acc $offset-acc / 2));
+  }
+  @return $result;
+ }" data-collapsed="@function _parse-row($input) { ... }"><code>@function _parse-row($input) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Parses a single row of string-based spec (in form of characters &#39;x&#39;, &#39;-&#39; and &#39; &#39;), giving chained syntax as output.</p><p>It currently has to receive a fictional second argument which is unused due to Sass limitation of dynamically figuring out the number of arguments a function expects.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$input</code></th><td data-label="desc"><p>A string which represents the ASCII specification for a single row of a grid. For example, `x-x-x x&#39; or &#39;x x&#39;. Note that the string must be quotes because it contains whitespaces (sometimes even several in a row, which is important for constructing the grid). This information would be lost if the string was unquoted.</p></td><td data-label="type"><code>String</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>List</code> &mdash;<p>A specification of the row in chained syntax.</p></div><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>$row: &#39;x x x&#39;;
+parse-row($row, 0); // (1 0) (1 0) (1 0)
+                    // All elements have one &quot;unit&quot; width, and no offset from
+                    // the previous element.</code></pre></div><div class="item__example example"><pre class="example__code language-scss"><code>$row: &#39;x-x x&#39;;
+parse-row($row, 0); // (2 0) (1 0)
+                    // The first element is two units, the second one unit.</code></pre></div><div class="item__example example"><pre class="example__code language-scss"><code>$row: &#39;x   x-x&#39;;
+parse-row($row, 0); // (1 0) (2 1)
+                    // The first element is one unit. The second element is two
+                    // units, offset by one unit from the previous element.</code></pre></div><h3 class="item__sub-heading">Throws</h3><ul class="list-unstyled"><li><p>Parsing empty string</p></li><li><p>A row cannot being with</p></li><li><p>Parsing error. Unexpected token after</p></li><li><p>A row cannot end with</p></li></ul><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[mixin]</span> <a href="#grid api-mixin-grid"><code>grid</code></a></li></ul><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section><section class="main__item container item" id="internal-function-_shorthand-to-expanded-chained"><h3 class="item__heading"><span class="item__access">[private]</span> <a class="item__name" href="#function-_shorthand-to-expanded-chained">_shorthand-to-expanded-chained</a></h3><span class="item__since">Since 0.1.0</span><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function _shorthand-to-expanded-chained($list) { 
+  @for $i from 1 through length($list) {
+    $current: nth($list, $i);
+    @if type_of($current) == number {
+      $list: set-nth($list, $i, ($current 0));
+    }
+  }
+  @return $list;
+ }" data-collapsed="@function _shorthand-to-expanded-chained($list) { ... }"><code>@function _shorthand-to-expanded-chained($list) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Users can use shorthands because they usually don&#39;t want to specify an offset. This function expands the shorthand syntax to expanded syntax.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$list</code></th><td data-label="desc"><p>A (partially) shorthand syntax for grid row spec.</p></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>List</code> &mdash;<p>The grid row spec in chained extended syntax.</p></div><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>_shorthand-to-expanded-chained(1 1 2); // (1 0) (1 2) (2 3)</code></pre></div><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section></section></section><section class="main__section"><h1 class="main__heading" id="internal util"><div class="container">internal util</div></h1><section class="main__sub-section" id="internal util-function"><h2 class="main__heading--secondary"><div class="container">functions</div></h2><section class="main__item container item" id="internal util-function-_fn-apply"><h3 class="item__heading"><span class="item__access">[private]</span> <a class="item__name" href="#function-_fn-apply">_fn-apply</a></h3><span class="item__since">Since 0.1.0</span><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function _fn-apply($list, $fn) { 
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+ }" data-collapsed="@function _fn-apply($list, $fn) { ... }"><code>@function _fn-apply($list, $fn) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Creates a new list with the results of calling a provided function one very item in this list. Equivalent to <code>Array#map</code> in JavaScript.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$list</code></th><td data-label="desc"><p>The list which the function is being applied to.</p></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$fn</code></th><td data-label="desc"><p>Reference to a function applied to every item. This function must take two arguments: item and index.</p></td><td data-label="type"><code>Function</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>List</code> &mdash;<p>A new list (see description).</p></div><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>@function square($x, $i) { @return $x * $x }
+fn-apply(1 2 3 4, square); // 1 4 9 16</code></pre></div><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[mixin]</span> <a href="#grid api-mixin-grid"><code>grid</code></a></li><li><span class="item__cross-type">[mixin]</span> <a href="#grid api-mixin-grid"><code>grid</code></a></li></ul><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section><section class="main__item container item" id="internal util-function-_fn-reduce"><h3 class="item__heading"><span class="item__access">[private]</span> <a class="item__name" href="#function-_fn-reduce">_fn-reduce</a></h3><span class="item__since">Since 0.1.0</span><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function _fn-reduce($list, $fn, $initial) { 
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+ }" data-collapsed="@function _fn-reduce($list, $fn, $initial) { ... }"><code>@function _fn-reduce($list, $fn, $initial) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Applies a function against an accumulator and each item of the list (from left to right), to reduce it to a single value. Equivalent to <code>Array#reduce</code> in JavaScript.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$list</code></th><td data-label="desc"><p>The list being reduced.</p></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$fn</code></th><td data-label="desc"><p>Reference to a function applied to every item. This function must take two arguments: accumulated and current value.</p></td><td data-label="type"><code>Function</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$initial</code></th><td data-label="desc"><p>The initial value of the accumulator, before any items are visited.</p></td><td data-label="type"><code>Any</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>List</code> &mdash;<p>A new list (see description).</p></div><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>@function sum($acc, $curr) { @return $acc + $curr }
+fn-apply(1 2 3 4, sum, 0); // 10</code></pre></div><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section><section class="main__item container item" id="internal util-function-_fn-filter"><h3 class="item__heading"><span class="item__access">[private]</span> <a class="item__name" href="#function-_fn-filter">_fn-filter</a></h3><span class="item__since">Since 0.1.0</span><div class="item__code-wrapper"><pre class="item__code item__code--togglable language-scss" data-current-state="collapsed" data-expanded="@function _fn-filter($list, $fn) { 
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+ }" data-collapsed="@function _fn-filter($list, $fn) { ... }"><code>@function _fn-filter($list, $fn) { ... }</code></pre></div><h3 class="item__sub-heading">Description</h3><div class="item__description"><p>Creates a new list with all items that pass the test implemented by the provided function. Equivalent to <code>Array#filter</code> in JavaScript.</p></div><h3 class="item__sub-heading">Parameters</h3><table class="item__parameters"><thead><tr><th scope="col"><span class="visually-hidden">parameter </span>Name</th><th scope="col"><span class="visually-hidden">parameter </span>Description</th><th scope="col"><span class="visually-hidden">parameter </span>Type</th><th scope="col"><span class="visually-hidden">parameter </span>Default value</th></tr></thead><tbody><tr class="item__parameter"><th scope="row" data-label="name"><code>$list</code></th><td data-label="desc"><p>The list being filtered.</p></td><td data-label="type"><code>List</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr><tr class="item__parameter"><th scope="row" data-label="name"><code>$fn</code></th><td data-label="desc"><p>Reference to a filtering function.</p></td><td data-label="type"><code>Function</code></td><td data-label="default">&mdash;<span class="visually-hidden"> none</span></td></tr></tbody></table><h3 class="item__sub-heading">Returns</h3><div class="item__description item__description--inline"><code>List</code> &mdash;<p>A new list (see description).</p></div><h3 class="item__sub-heading">Example</h3><div class="item__example example"><pre class="example__code language-scss"><code>@function aboveTen($x) { @return x &gt; 10 }
+fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100</code></pre></div><h3 class="item__sub-heading">Used by</h3><ul class="list-unstyled"><li><span class="item__cross-type">[mixin]</span> <a href="#grid api-mixin-grid"><code>grid</code></a></li></ul><h3 class="item__sub-heading">Author</h3><ul class="list-unstyled"><li><p>Lazar Ljubenović (lazarljubenovic)</p></li></ul></section></section></section><footer class="footer" role="contentinfo"><div class="container"><div class="footer__project-info project-info"><!-- Name and URL --> <span class="project-info__name">Grassy</span><!-- Version --> <span class="project-info__version">- v0.1.0</span><!-- License --> <span class="project-info__license">, under MIT</span></div><a class="footer__watermark" href="http://sassdoc.com"><img src="assets/images/logo_light_inline.svg" alt="SassDoc Logo"></a></div></footer></article><script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script><script>window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')</script><script src="assets/js/main.min.js"></script></body></html>

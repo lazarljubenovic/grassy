@@ -1,6 +1,6 @@
 # Grassy | [Docs](https://lazarljubenovic.github.io/grassy/)
 
-> What You ASCII is What You Get
+> what you ascii is what you get
 
 Build layout through ASCII art in Sass (and more).
 

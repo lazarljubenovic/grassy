@@ -1,4 +1,4 @@
-# Grassy | [Docs](https://lazarljubenovic.github.io/grassy/)
+# Grassy | [Docs](https://lazarljubenovic.github.io/grassy/) | [Playground](http://codepen.io/dbox/pen/aJLGxE)
 
 > What you ASCII is what you get.
 
@@ -114,6 +114,10 @@ section {
 ![](http://i.imgur.com/ChX2HVE.png)
 
 Also take a look at [full documentation](https://lazarljubenovic.github.io/grassy/). (Includes both the public API and explanation of some internal functions to help you if you want to contribute but have no idea where to start from.)
+
+## Playground
+
+Try it out now in the [Codepen playground](http://codepen.io/dbox/pen/aJLGxE).
 
 ## Why Grassy?
 

@@ -576,100 +576,110 @@
   $distribute-dangling: false,
   $dangling-at-beginning: false
 ) {
-  $n: $number-of-columns;
-  $g: $gutter-width;
-  $width: _get-width($n, $g);
-  display: flex;
-  flex-wrap: wrap;
+  @if $number-of-columns != 1 {
+    $n: $number-of-columns;
+    $g: $gutter-width;
+    $width: _get-width($n, $g);
+    display: flex;
+    flex-wrap: wrap;
 
-  > * {
-    width: $width;
-    margin-bottom: $gutter-height;
+    > * {
+      width: $width;
+      margin-bottom: $gutter-height;
 
-    @if not $dangling-at-beginning {
-      &:not(:nth-child(#{$n}n)) {
-        margin-right: $g;
+      @if not $dangling-at-beginning {
+        &:not(:nth-child(#{$n}n)) {
+          margin-right: $g;
+        }
+      } @else {
+        &:not(:nth-last-child(#{$n}n + 1)) {
+          margin-right: $g;
+        }
       }
-    } @else {
-      &:not(:nth-last-child(#{$n}n + 1)) {
-        margin-right: $g;
-      }
-    }
 
-    // Handle the bottom-margin of last row
-    // This depends on do we know that there will be dangling elements or not
-    @if not $assume-no-dangling-elements {
-      // For every possible number of dangling elements:
-      @for $k from 1 through $n {
-        // For all dangling elements in this case:
-        @for $i from 1 through $k {
-          $inv-i: $k + 1 - $i;
-          &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+      // Handle the bottom-margin of last row
+      // This depends on do we know that there will be dangling elements or not
+      @if not $assume-no-dangling-elements {
+        // For every possible number of dangling elements:
+        @for $k from 1 through $n {
+          // For all dangling elements in this case:
+          @for $i from 1 through $k {
+            $inv-i: $k + 1 - $i;
+            &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+              margin-bottom: 0;
+            }
+          }
+        }
+      } @else {
+        // We don't need to loop over every possible number of dangling elements since
+        // we know that it's always equal to $n.
+        @for $i from 1 through $n {
+          &:nth-last-child(#{$i}) {
             margin-bottom: 0;
           }
         }
       }
-    } @else {
-      // We don't need to loop over every possible number of dangling elements since
-      // we know that it's always equal to $n.
-      @for $i from 1 through $n {
-        &:nth-last-child(#{$i}) {
-          margin-bottom: 0;
-        }
-      }
-    }
 
-    // If dangling elements are at the top, that means that the bottom row will always be
-    // filled completely. In this case we want to reset those elements' bottom margin to 0,
-    // however only if there are more than $n elements in the container:
-    @if $dangling-at-beginning {
-      // For every possible number of dangling elements (at the top):
-      @for $k from 1 through $n {
-        // An inner loop to handle "however only if there are more than $n elements"
-        @for $i from 1 through $k {
-          &:nth-last-child(#{$k}):not(:nth-child(#{$i})) {
-            margin-bottom: 0;
+      // If dangling elements are at the top, that means that the bottom row will always be
+      // filled completely. In this case we want to reset those elements' bottom margin to 0,
+      // however only if there are more than $n elements in the container:
+      @if $dangling-at-beginning {
+        // For every possible number of dangling elements (at the top):
+        @for $k from 1 through $n {
+          // An inner loop to handle "however only if there are more than $n elements"
+          @for $i from 1 through $k {
+            &:nth-last-child(#{$k}):not(:nth-child(#{$i})) {
+              margin-bottom: 0;
+            }
           }
         }
       }
-    }
 
-    // Handle the last row as distributed dangling
-    @if $distribute-dangling and not $dangling-at-beginning {
-      // For every possible number of dangling elements:
-      @for $k from 1 through $n {
-        // Calculate the new width:
-        $dangling-width: _get-width($k, $g);
-        // The last element should have right margin reset to 0:
-        &:last-child { margin-right: 0; }
-        // For all dangling elements in this case:
-        @for $i from 1 through $k {
-          $inv-i: $k + 1 - $i;
-          &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
-            width: $dangling-width;
+      // Handle the last row as distributed dangling
+      @if $distribute-dangling and not $dangling-at-beginning {
+        // For every possible number of dangling elements:
+        @for $k from 1 through $n {
+          // Calculate the new width:
+          $dangling-width: _get-width($k, $g);
+          // The last element should have right margin reset to 0:
+          &:last-child { margin-right: 0; }
+          // For all dangling elements in this case:
+          @for $i from 1 through $k {
+            $inv-i: $k + 1 - $i;
+            &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+              width: $dangling-width;
+            }
           }
         }
       }
-    }
 
-    // Handle the first row as distributed dangling
-    @if $distribute-dangling and $dangling-at-beginning {
-      // For every possible number of dangling elements:
-      @for $k from 1 through $n {
-        // Calculate the new width:
-        $dangling-width: _get-width($k, $g);
-        // The last element of the first row should have right margin reset to 0:
-        &:nth-child(#{$k}):nth-last-child(#{$n}n + 1) { margin-right: 0; }
-        // For all dangling elements in this case:
-        @for $i from 1 through $k {
-          $inv-i: $k + 1 - $i;
-          &:nth-child(#{$inv-i}):nth-last-child(#{$n}n + #{$i}) {
-            width: $dangling-width;
+      // Handle the first row as distributed dangling
+      @if $distribute-dangling and $dangling-at-beginning {
+        // For every possible number of dangling elements:
+        @for $k from 1 through $n {
+          // Calculate the new width:
+          $dangling-width: _get-width($k, $g);
+          // The last element of the first row should have right margin reset to 0:
+          &:nth-child(#{$k}):nth-last-child(#{$n}n + 1) { margin-right: 0; }
+          // For all dangling elements in this case:
+          @for $i from 1 through $k {
+            $inv-i: $k + 1 - $i;
+            &:nth-child(#{$inv-i}):nth-last-child(#{$n}n + #{$i}) {
+              width: $dangling-width;
+            }
           }
         }
       }
-    }
 
+    }
+  } @else {
+    // $number-of-columns == 1
+    // We don't worry about left/right margins here. We also don't worry about dangling elements
+    // because there can be no dangling elements here. We just let it all flow.
+    display: flex;
+    flex-direction: column;
+    > * { width: 100% }
+    > :not(:last-child) { margin-bottom: $gutter-height }
   }
 }
 

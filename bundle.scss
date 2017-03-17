@@ -637,12 +637,12 @@
 
       // Handle the last row as distributed dangling
       @if $distribute-dangling and not $dangling-at-beginning {
+        &:last-child { margin-right: 0; }
         // For every possible number of dangling elements:
         @for $k from 1 through $n {
           // Calculate the new width:
           $dangling-width: _get-width($k, $g);
           // The last element should have right margin reset to 0:
-          &:last-child { margin-right: 0; }
           // For all dangling elements in this case:
           @for $i from 1 through $k {
             $inv-i: $k + 1 - $i;

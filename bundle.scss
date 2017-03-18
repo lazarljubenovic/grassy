@@ -1,0 +1,1528 @@
+///
+/// Creates a new list with the results of calling a provided function one very item
+/// in this list.
+/// Equivalent to `Array#map` in JavaScript.
+///
+/// @param {List} $list The list which the function is being applied to.
+///
+/// @param {Function} $fn Reference to a function applied to every item.
+/// This function must take two arguments: item and index.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function square($x, $i) { @return $x * $x }
+///   fn-apply(1 2 3 4, square); // 1 4 9 16
+///
+@function _fn-apply($list, $fn) {
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+}
+
+///
+/// Applies a function against an accumulator and each item of the list (from left to
+/// right), to reduce it to a single value.
+/// Equivalent to `Array#reduce` in JavaScript.
+///
+/// @param {List} $list  The list being reduced.
+///
+/// @param {Function} $fn  Reference to a function applied to every item.
+/// This function must take two arguments: accumulated and current value.
+///
+/// @param {*} $initial The initial value of the accumulator, before any items are
+/// visited.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function sum($acc, $curr) { @return $acc + $curr }
+///   fn-apply(1 2 3 4, sum, 0); // 10
+///
+@function _fn-reduce($list, $fn, $initial) {
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+}
+
+///
+/// Creates a new list with all items that pass the test implemented by the provided
+/// function.
+/// Equivalent to `Array#filter` in JavaScript.
+///
+/// @param {List} $list The list being filtered.
+/// @param {Function} $fn Reference to a filtering function.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function aboveTen($x) { @return x > 10 }
+///   fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100
+///
+@function _fn-filter($list, $fn) {
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+}
+
+///
+/// Creates a new list with the results of calling a provided function one very item
+/// in this list.
+/// Equivalent to `Array#map` in JavaScript.
+///
+/// @param {List} $list The list which the function is being applied to.
+///
+/// @param {Function} $fn Reference to a function applied to every item.
+/// This function must take two arguments: item and index.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function square($x, $i) { @return $x * $x }
+///   fn-apply(1 2 3 4, square); // 1 4 9 16
+///
+@function _fn-apply($list, $fn) {
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+}
+
+///
+/// Applies a function against an accumulator and each item of the list (from left to
+/// right), to reduce it to a single value.
+/// Equivalent to `Array#reduce` in JavaScript.
+///
+/// @param {List} $list  The list being reduced.
+///
+/// @param {Function} $fn  Reference to a function applied to every item.
+/// This function must take two arguments: accumulated and current value.
+///
+/// @param {*} $initial The initial value of the accumulator, before any items are
+/// visited.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function sum($acc, $curr) { @return $acc + $curr }
+///   fn-apply(1 2 3 4, sum, 0); // 10
+///
+@function _fn-reduce($list, $fn, $initial) {
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+}
+
+///
+/// Creates a new list with all items that pass the test implemented by the provided
+/// function.
+/// Equivalent to `Array#filter` in JavaScript.
+///
+/// @param {List} $list The list being filtered.
+/// @param {Function} $fn Reference to a filtering function.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function aboveTen($x) { @return x > 10 }
+///   fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100
+///
+@function _fn-filter($list, $fn) {
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+}
+
+
+@function _sum($acc, $curr) { @return $acc + $curr; }
+
+@function sum($list) { @return _fn-reduce($list, _sum, 0); }
+
+@function _pair-sum($pair) { @return nth($pair, 1) + nth($pair, 2); }
+
+@function sum-of-pairs($list) {
+  $list: _fn-apply($list, _pair-sum);
+  @return sum($list);
+}
+
+// Get first element of the list
+@function first($list) { @return nth($list, 1); }
+
+// Get second element of the list
+@function second($list) { @return nth($list, 2); }
+
+// Get last element of the list
+@function last($list) {@return nth($list, length($list)); }
+
+// Get first n elements of the list
+@function first-n($list, $n) {
+  $new-list: ();
+  @for $i from 1 through $n {
+    $new-list: append($new-list, nth($list, $i), 'space');
+  }
+  @return $new-list;
+}
+
+// Get n-th character from string
+@function _nth-char($string, $n) { @return str-slice($string, $n, $n); }
+
+// Get cell width based on number of cells in a row ($n) and gutter width ($g)
+@function _get-width($n, $g) {
+  @return calc((100% - #{($n - 1) * $g}) / #{$n});
+}
+
+
+@function _decrement-second($pair, $index) {
+  @return (first($pair) second($pair) - 1);
+}
+
+@function _decrement-second-pair($list) {
+  @return _fn-apply($list, decrement-second);
+}
+
+///
+/// In "global" format, the second number (offset) in the spec pair tells us at which
+/// column does the cell begin. This is the format which is given by the user. This
+/// function transforms that into a "chained" format where the second number (chained
+/// offset) tells us how many cells are supposed to be skipped, relative from the
+/// last known cell.
+///
+/// The algorithm works as follows.
+///
+/// 1. Decrement all offsets.
+/// 2. Subtract "current" offset from the sum of all previous pairs.
+///
+/// @param {List} $list The list global syntax.
+///
+/// @returns {List} The list in chained syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///
+///   'x x x-x'             // ascii visualization (irrelevant in code)
+///   ((1 1) (1 2) (2 3))   // input
+///   ((1 0) (1 0) (2 0))   // output
+///
+///   'x-x   x'             // ascii
+///   ((2 1) (1 4))         // input
+///   ((2 0) (1 1))         // output
+///
+///   '  x-x-x'             // ascii
+///   ((3 2))               // input
+///   ((3 1))               // output
+///
+///
+@function _global-to-chained($list) {
+
+  // First step
+  $list: _decrement-second-pair($list);
+
+  // If list has only one element, that's it (there's no "previous")
+  @if length($list) == 1 {
+    @return $list;
+  }
+
+  // Second step
+  // For each "current" in list...
+  @for $i from 2 through length($list) {
+    // We grab the sum of sum of pairs of previous ones:
+    $current: nth($list, $i);
+    $previous-list: first-n($list, $i - 1);
+    $sum: sum-of-pairs($previous-list);
+    $new-value: second($current) - $sum;
+    $new-pair: (first($current) $new-value);
+    $list: set-nth($list, $i, $new-pair);
+  }
+
+  @return $list;
+
+}
+
+
+///
+/// Users can use shorthands because they usually don't want to specify an offset.
+/// This function expands the shorthand syntax to expanded syntax.
+/// @ignore TODO Users can not actually use this syntax yet from their code, fix that
+///
+/// Note that the resulting list is in chained syntax, not global.
+///
+/// @param {List} $list A (partially) shorthand syntax for grid row spec.
+///
+/// @returns {List} The grid row spec in chained extended syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   _shorthand-to-expanded-chained(1 1 2); // (1 0) (1 2) (2 3)
+///
+@function _shorthand-to-expanded-chained($list) {
+  @for $i from 1 through length($list) {
+    $current: nth($list, $i);
+    @if type_of($current) == number {
+      $list: set-nth($list, $i, ($current 0));
+    }
+  }
+  @return $list;
+}
+
+
+///
+/// Creates a new list with the results of calling a provided function one very item
+/// in this list.
+/// Equivalent to `Array#map` in JavaScript.
+///
+/// @param {List} $list The list which the function is being applied to.
+///
+/// @param {Function} $fn Reference to a function applied to every item.
+/// This function must take two arguments: item and index.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function square($x, $i) { @return $x * $x }
+///   fn-apply(1 2 3 4, square); // 1 4 9 16
+///
+@function _fn-apply($list, $fn) {
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+}
+
+///
+/// Applies a function against an accumulator and each item of the list (from left to
+/// right), to reduce it to a single value.
+/// Equivalent to `Array#reduce` in JavaScript.
+///
+/// @param {List} $list  The list being reduced.
+///
+/// @param {Function} $fn  Reference to a function applied to every item.
+/// This function must take two arguments: accumulated and current value.
+///
+/// @param {*} $initial The initial value of the accumulator, before any items are
+/// visited.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function sum($acc, $curr) { @return $acc + $curr }
+///   fn-apply(1 2 3 4, sum, 0); // 10
+///
+@function _fn-reduce($list, $fn, $initial) {
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+}
+
+///
+/// Creates a new list with all items that pass the test implemented by the provided
+/// function.
+/// Equivalent to `Array#filter` in JavaScript.
+///
+/// @param {List} $list The list being filtered.
+/// @param {Function} $fn Reference to a filtering function.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function aboveTen($x) { @return x > 10 }
+///   fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100
+///
+@function _fn-filter($list, $fn) {
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+}
+
+
+@function _sum($acc, $curr) { @return $acc + $curr; }
+
+@function sum($list) { @return _fn-reduce($list, _sum, 0); }
+
+@function _pair-sum($pair) { @return nth($pair, 1) + nth($pair, 2); }
+
+@function sum-of-pairs($list) {
+  $list: _fn-apply($list, _pair-sum);
+  @return sum($list);
+}
+
+// Get first element of the list
+@function first($list) { @return nth($list, 1); }
+
+// Get second element of the list
+@function second($list) { @return nth($list, 2); }
+
+// Get last element of the list
+@function last($list) {@return nth($list, length($list)); }
+
+// Get first n elements of the list
+@function first-n($list, $n) {
+  $new-list: ();
+  @for $i from 1 through $n {
+    $new-list: append($new-list, nth($list, $i), 'space');
+  }
+  @return $new-list;
+}
+
+// Get n-th character from string
+@function _nth-char($string, $n) { @return str-slice($string, $n, $n); }
+
+// Get cell width based on number of cells in a row ($n) and gutter width ($g)
+@function _get-width($n, $g) {
+  @return calc((100% - #{($n - 1) * $g}) / #{$n});
+}
+
+
+///
+/// Use this when you know the number of columns. All cells are always of equal width
+/// (with exception of the last or first column in combination with some flags).
+/// You are not in charge of cell sizes; you can only influence the gutter width.
+///
+/// @param {Number} $number-of-columns The number of columns the grid will have.
+///
+/// @param {Number} $gutter-width [1em] The distance between two horizontal neighbor
+/// cells.
+///
+/// @param {Number} $gutter-height [$gutter-height] The distance between two vertical
+/// neighbor cells.
+///
+/// @ignore @param {Boolean} $assume-divisible
+/// @ignore By default, this mixin tries to work with any HTML you provide it. This means
+/// @ignore that even when you guarantee your HTML will have a certain structure, mixin
+/// @ignore will guarantee that it won't break with more/less elements in HTML than
+/// @ignore expected.
+/// @ignore
+/// @ignore For example, this mixin takes care of cases where you specify a two-column layout,
+/// @ignore yet provide an uneven number of elements in HTML, for example 3. If you can guarantee
+/// @ignore that number of elements in the container will always be divisible by number of columns
+/// @ignore (`$number-of-columns`), you can set the flag `$assume-no-dangling-elements` to `true`.
+/// @ignore
+/// @ignore Note that the resulting grid will still be uneven. For this behaviour, see
+/// @ignore `$distribute-dangling`.
+/// @ignore TODO: This ^ appears to be useless after all. However, carefully consider what can go
+/// @ignore wrong if it's left out.
+///
+/// @param {Boolean} $distribute-dangling
+/// When there are not enough elements in the last column, they are left dangling to the
+/// left, making the grid uneven. By setting this parameter to `true`, you can force the
+/// grid to make the dangling elements in the last column wider.
+///
+/// In you'd prefer this to happen in the first column, check out `$dangling-at-beginning`.
+///
+/// @param {Boolean} $dangling-at-beginning
+/// By default, dangling elements are at the bottom of the grid. If this flag is set,
+/// the dangling elements considered to be the ones at the first row of the grid.
+///
+/// This flag makes sense only if `$distribute-dangling` is set to true.
+///
+/// @output The CSS properties necessary for making the grid look the specified way.
+///
+/// @access public
+///
+/// @group Grid API
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @example scss The basic usage
+///   @include fixed-grid(3);
+///   // with 6 elements    with 5 elements    with 4 elements
+///   // x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+///   // x-x x-x x-x        x-x x-x            x-x
+///
+/// @example scss Handling dangling elements
+///   @include fixed-grid(3, $distribute-dangling: true);
+///   // with 6 elements    with 5 elements    with 4 elements
+///   // x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+///   // x-x x-x x-x        x-x-x x-x-x        x-x-x-x-x-x
+///
+/// @example scss Handling dangling element (at top)
+///   @include fixed-grid(3, $distribute-dangling: true);
+///   // with 6 elements    with 5 elements    with 4 elements
+///   // x-x x-x x-x        x-x-x x-x-x        x-x-x-x-x-x
+///   // x-x x-x x-x        x-x x-x x-x        x-x x-x x-x
+///
+@mixin fixed-grid(
+  $number-of-columns, $gutter-width: 1em, $gutter-height: $gutter-width,
+  // flags:
+  $assume-no-dangling-elements: false,
+  $distribute-dangling: false,
+  $dangling-at-beginning: false
+) {
+  $n: $number-of-columns;
+  $g: $gutter-width;
+  $width: _get-width($n, $g);
+  display: flex;
+  flex-wrap: wrap;
+
+  > * {
+    width: $width;
+    margin-bottom: $gutter-height;
+
+    @if not $dangling-at-beginning {
+      &:not(:nth-child(#{$n}n)) {
+        margin-right: $g;
+      }
+    } @else {
+      &:not(:nth-last-child(#{$n}n + 1)) {
+        margin-right: $g;
+      }
+    }
+
+    // Handle the bottom-margin of last row
+    // This depends on do we know that there will be dangling elements or not
+    @if not $assume-no-dangling-elements {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    } @else {
+      // We don't need to loop over every possible number of dangling elements since
+      // we know that it's always equal to $n.
+      @for $i from 1 through $n {
+        &:nth-last-child(#{$i}) {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    // If dangling elements are at the top, that means that the bottom row will always be
+    // filled completely. In this case we want to reset those elements' bottom margin to 0,
+    // however only if there are more than $n elements in the container:
+    @if $dangling-at-beginning {
+      // For every possible number of dangling elements (at the top):
+      @for $k from 1 through $n {
+        // An inner loop to handle "however only if there are more than $n elements"
+        @for $i from 1 through $k {
+          &:nth-last-child(#{$k}):not(:nth-child(#{$i})) {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+
+    // Handle the last row as distributed dangling
+    @if $distribute-dangling and not $dangling-at-beginning {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // Calculate the new width:
+        $dangling-width: _get-width($k, $g);
+        // The last element should have right margin reset to 0:
+        &:last-child { margin-right: 0; }
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &:nth-last-child(#{$inv-i}):nth-child(#{$n}n + #{$i}) {
+            width: $dangling-width;
+          }
+        }
+      }
+    }
+
+    // Handle the first row as distributed dangling
+    @if $distribute-dangling and $dangling-at-beginning {
+      // For every possible number of dangling elements:
+      @for $k from 1 through $n {
+        // Calculate the new width:
+        $dangling-width: _get-width($k, $g);
+        // The last element of the first row should have right margin reset to 0:
+        &:nth-child(#{$k}):nth-last-child(#{$n}n + 1) { margin-right: 0; }
+        // For all dangling elements in this case:
+        @for $i from 1 through $k {
+          $inv-i: $k + 1 - $i;
+          &:nth-child(#{$inv-i}):nth-last-child(#{$n}n + #{$i}) {
+            width: $dangling-width;
+          }
+        }
+      }
+    }
+
+  }
+}
+
+///
+/// Users can use shorthands because they usually don't want to specify an offset.
+/// This function expands the shorthand syntax to expanded syntax.
+/// @ignore TODO Users can not actually use this syntax yet from their code, fix that
+///
+/// Note that the resulting list is in chained syntax, not global.
+///
+/// @param {List} $list A (partially) shorthand syntax for grid row spec.
+///
+/// @returns {List} The grid row spec in chained extended syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   _shorthand-to-expanded-chained(1 1 2); // (1 0) (1 2) (2 3)
+///
+@function _shorthand-to-expanded-chained($list) {
+  @for $i from 1 through length($list) {
+    $current: nth($list, $i);
+    @if type_of($current) == number {
+      $list: set-nth($list, $i, ($current 0));
+    }
+  }
+  @return $list;
+}
+
+///
+/// Creates a new list with the results of calling a provided function one very item
+/// in this list.
+/// Equivalent to `Array#map` in JavaScript.
+///
+/// @param {List} $list The list which the function is being applied to.
+///
+/// @param {Function} $fn Reference to a function applied to every item.
+/// This function must take two arguments: item and index.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function square($x, $i) { @return $x * $x }
+///   fn-apply(1 2 3 4, square); // 1 4 9 16
+///
+@function _fn-apply($list, $fn) {
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+}
+
+///
+/// Applies a function against an accumulator and each item of the list (from left to
+/// right), to reduce it to a single value.
+/// Equivalent to `Array#reduce` in JavaScript.
+///
+/// @param {List} $list  The list being reduced.
+///
+/// @param {Function} $fn  Reference to a function applied to every item.
+/// This function must take two arguments: accumulated and current value.
+///
+/// @param {*} $initial The initial value of the accumulator, before any items are
+/// visited.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function sum($acc, $curr) { @return $acc + $curr }
+///   fn-apply(1 2 3 4, sum, 0); // 10
+///
+@function _fn-reduce($list, $fn, $initial) {
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+}
+
+///
+/// Creates a new list with all items that pass the test implemented by the provided
+/// function.
+/// Equivalent to `Array#filter` in JavaScript.
+///
+/// @param {List} $list The list being filtered.
+/// @param {Function} $fn Reference to a filtering function.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function aboveTen($x) { @return x > 10 }
+///   fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100
+///
+@function _fn-filter($list, $fn) {
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+}
+
+
+@function _sum($acc, $curr) { @return $acc + $curr; }
+
+@function sum($list) { @return _fn-reduce($list, _sum, 0); }
+
+@function _pair-sum($pair) { @return nth($pair, 1) + nth($pair, 2); }
+
+@function sum-of-pairs($list) {
+  $list: _fn-apply($list, _pair-sum);
+  @return sum($list);
+}
+
+// Get first element of the list
+@function first($list) { @return nth($list, 1); }
+
+// Get second element of the list
+@function second($list) { @return nth($list, 2); }
+
+// Get last element of the list
+@function last($list) {@return nth($list, length($list)); }
+
+// Get first n elements of the list
+@function first-n($list, $n) {
+  $new-list: ();
+  @for $i from 1 through $n {
+    $new-list: append($new-list, nth($list, $i), 'space');
+  }
+  @return $new-list;
+}
+
+// Get n-th character from string
+@function _nth-char($string, $n) { @return str-slice($string, $n, $n); }
+
+// Get cell width based on number of cells in a row ($n) and gutter width ($g)
+@function _get-width($n, $g) {
+  @return calc((100% - #{($n - 1) * $g}) / #{$n});
+}
+
+///
+/// Creates a new list with the results of calling a provided function one very item
+/// in this list.
+/// Equivalent to `Array#map` in JavaScript.
+///
+/// @param {List} $list The list which the function is being applied to.
+///
+/// @param {Function} $fn Reference to a function applied to every item.
+/// This function must take two arguments: item and index.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function square($x, $i) { @return $x * $x }
+///   fn-apply(1 2 3 4, square); // 1 4 9 16
+///
+@function _fn-apply($list, $fn) {
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+}
+
+///
+/// Applies a function against an accumulator and each item of the list (from left to
+/// right), to reduce it to a single value.
+/// Equivalent to `Array#reduce` in JavaScript.
+///
+/// @param {List} $list  The list being reduced.
+///
+/// @param {Function} $fn  Reference to a function applied to every item.
+/// This function must take two arguments: accumulated and current value.
+///
+/// @param {*} $initial The initial value of the accumulator, before any items are
+/// visited.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function sum($acc, $curr) { @return $acc + $curr }
+///   fn-apply(1 2 3 4, sum, 0); // 10
+///
+@function _fn-reduce($list, $fn, $initial) {
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+}
+
+///
+/// Creates a new list with all items that pass the test implemented by the provided
+/// function.
+/// Equivalent to `Array#filter` in JavaScript.
+///
+/// @param {List} $list The list being filtered.
+/// @param {Function} $fn Reference to a filtering function.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function aboveTen($x) { @return x > 10 }
+///   fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100
+///
+@function _fn-filter($list, $fn) {
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+}
+
+
+@function _sum($acc, $curr) { @return $acc + $curr; }
+
+@function sum($list) { @return _fn-reduce($list, _sum, 0); }
+
+@function _pair-sum($pair) { @return nth($pair, 1) + nth($pair, 2); }
+
+@function sum-of-pairs($list) {
+  $list: _fn-apply($list, _pair-sum);
+  @return sum($list);
+}
+
+// Get first element of the list
+@function first($list) { @return nth($list, 1); }
+
+// Get second element of the list
+@function second($list) { @return nth($list, 2); }
+
+// Get last element of the list
+@function last($list) {@return nth($list, length($list)); }
+
+// Get first n elements of the list
+@function first-n($list, $n) {
+  $new-list: ();
+  @for $i from 1 through $n {
+    $new-list: append($new-list, nth($list, $i), 'space');
+  }
+  @return $new-list;
+}
+
+// Get n-th character from string
+@function _nth-char($string, $n) { @return str-slice($string, $n, $n); }
+
+// Get cell width based on number of cells in a row ($n) and gutter width ($g)
+@function _get-width($n, $g) {
+  @return calc((100% - #{($n - 1) * $g}) / #{$n});
+}
+
+
+///
+/// Parses a single row of string-based spec (in form of characters 'x', '-' and ' '),
+/// giving chained syntax as output.
+///
+/// It currently has to receive a fictional second argument which is unused due to Sass
+/// limitation of dynamically figuring out the number of arguments a function expects.
+///
+/// @param {String} $input - A string which represents the ASCII specification for a
+/// single row of a grid. For example, `x-x-x x' or 'x   x'. Note that the string must be
+/// quotes because it contains whitespaces (sometimes even several in a row, which is
+/// important for constructing the grid). This information would be lost if the string
+/// was unquoted.
+///
+/// @returns {List} A specification of the row in chained syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example scss
+///   $row: 'x x x';
+///   parse-row($row, 0); // (1 0) (1 0) (1 0)
+///                       // All elements have one "unit" width, and no offset from
+///                       // the previous element.
+///
+/// @example scss
+///   $row: 'x-x x';
+///   parse-row($row, 0); // (2 0) (1 0)
+///                       // The first element is two units, the second one unit.
+///
+/// @example scss
+///   $row: 'x   x-x';
+///   parse-row($row, 0); // (1 0) (2 1)
+///                       // The first element is one unit. The second element is two
+///                       // units, offset by one unit from the previous element.
+///
+@function _parse-row($input) {
+
+  @if str-length($input) == 0 {
+    @error 'Parsing empty string';
+    @return ();
+  }
+
+  $span-acc: 0; // accumulated value of how much the element is wide
+  $offset-acc: 0; // accumulated value of how much the element is offset from the previous
+  $result: (); // the result will be appended here and returned in the end
+  $token: _nth-char($input, 1); // the current token, initialized as first token
+
+  // The first token is treated differently because of no previous token and specific
+  // rules for the first token.
+  @if $token == 'x' {
+    $span-acc: 1;
+  } @else if $token == ' ' {
+    $offset-acc: 1;
+  } @else {
+    @error 'A row cannot being with "-".';
+  }
+
+  $previous-token: $token;
+
+  @if 2 <= str-length($input) {
+    @for $i from 2 through str-length($input) {
+      $token: _nth-char($input, $i);
+
+      // State machine
+      @if $previous-token == 'x' and $token == ' ' {
+        $result: append($result, ($span-acc $offset-acc / 2));
+        $span-acc: 0;
+        $offset-acc: 0;
+      } @else if $previous-token == 'x' and $token == '-' {
+        // do nothing
+      } @else if $previous-token == ' ' and $token == ' ' {
+        $offset-acc: $offset-acc + 1;
+      } @else if $previous-token == ' ' and $token == 'x' {
+        $span-acc: 1;
+      } @else if $previous-token == '-' and $token == 'x' {
+        $span-acc: $span-acc + 1;
+      } @else {
+        @error 'Parsing error. Unexpected token after "' + $previous-token + '": "' + $token + '".';
+      }
+
+      $previous-token: $token;
+    }
+  }
+
+  @if $previous-token == '-' {
+    @error 'A row cannot end with "-".';
+  }
+
+  @if $span-acc > 0 {
+    $result: append($result, ($span-acc $offset-acc / 2));
+  }
+  @return $result;
+}
+
+@function _is-string($something) {
+  @return type-of($something) == string;
+}
+
+
+///
+/// Use this for more complex grids. You specify the way each row will behave
+/// by an item in the list passed as a first argument, `$spec`. Each row can,
+/// individually, be specified in one of the two syntaxes:
+///   - ASCII-art syntax
+///   - distribute-syntax
+///
+///
+/// **ASCII-art syntax** is designed to help you visualize the resulting grid.
+/// Use it when the grid is complex with different widths and offsets for cells.
+///
+/// **Distribute-syntax** is used to easily create _n_ cells of equal width.
+/// It's very handy when cells are misaligned; for example consider a grid where
+/// the first row has three equal cells, and second row has five equal elements.
+/// Because GCD of 3 and 5 is 15, you'd have to do something like this if you
+/// use only ASCII-art syntax.
+///
+///      'x-x-x-x-x x-x-x-x-x x-x-x-x-x'
+///      'x-x-x x-x-x x-x-x x-x-x x-x-x'
+///
+/// Since this is very cumbersome to work with and doesn't help visualising at all.
+/// Instead, you can do the following.
+///
+///      distribute 3
+///      distribute 5
+///
+/// It simply says that the first row should distribute three, and the second five
+/// cells.
+///
+/// You can also **combine** the two syntaxes. For example, instead of
+///
+///      'x-x x-x'
+///      'x-x-x x'
+///      'x x-x-x'
+///      'x-x x-x'
+///
+/// you can write the following.
+///
+///      distribute 2
+///      'x-x-x x'
+///      'x x-x-x'
+///      distribute 2
+///
+/// Refer to examples for more.
+///
+/// Note that _ASCII art_ comes as a **string** (this is necessary because whitespace is
+/// important), and _distribute_ comes as a **list** of two items, where first item is a
+/// string `distribute` (which you don't have to quote), and second is the number
+/// of elements you want to distribute in the row.
+///
+/// @param {List} $spec The grid specification. See above.
+/// @param {Number} $gutter-width [1em] The distance between two horizontal neighbor
+///        cells.
+/// @param {Number} $gutter-height [$gutter-width] The distance between two vertical
+///        neighbor cells.
+///
+/// @output The properties used to create the specified grid.
+///
+/// @access public
+///
+/// @group Grid API
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example scss A simple ASCII grid
+///   .container {
+///     @include grid((
+///       'x x-x'
+///       'x-x x'
+///     ));
+///   }
+///
+/// @example scss A complex ASCII grid
+///   @include grid((
+///     'x-x-x x-x x'
+///     'x     x x-x'
+///     '      x    '
+///     '  x-x     x'
+///   ));
+///
+/// @example scss Two equivalent grids (demonstrates why `distribute` is handy)
+///   @include grid((
+///     'x-x x-x-x-x x-x-x-x'
+///     'x-x-x-x-x x-x-x-x-x'
+///   ))
+///   @include grid((
+///     'x x-x x-x'
+///     distribute 2
+///   ));
+///
+@mixin grid($spec, $gutter-width: 1em, $gutter-height: $gutter-width) {
+
+  @if type-of($spec) != list {
+    @error "First argument (`$spec`) must be a list.
+    If you are trying to pass in a single item in a list, you have to enclose
+    it in parenthesis and add a trailing comma. In other words, instead of
+    `@include grid(('x'))`, you have to write `@include grid (('x',))`.";
+  }
+
+  $parsed-spec: _fn-apply(_fn-filter($spec, _is-string), _parse-row);
+
+  // We must give these some initial dummy values because of scoping
+  // If they're not re-defined below, they're not going to be used anyway
+  $n: 0;
+  $width: 0;
+  $width-and-gutter: 0;
+
+  // We must check because it's possible that none of the specs were in ASCII-art form
+  @if length($parsed-spec) != 0 {
+    // Get the number of columns
+    $lengths: _fn-apply($parsed-spec, sum-of-pairs);
+    $number-of-columns: max($lengths...);
+
+    // Calculate the width of a cell
+    $n: $number-of-columns;
+    $width: calc((100% - #{($n - 1) * $gutter-width}) / #{$n});
+    $width-and-gutter: calc(#{$width} + #{$gutter-width});
+  }
+
+  $row-index: 0;
+  $cell-in-this-row-index: 0;
+  $cell-index: 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  @each $row in $spec {
+    @if type-of($row) == string {
+      // A string-type spec, in form of 'x-x x'
+      $row: _parse-row($row);
+      $row-index: $row-index + 1;
+      $cell-in-this-row-index: 0;
+      @each $cell in $row {
+        $cell-index: $cell-index + 1;
+        $cell-in-this-row-index: $cell-in-this-row-index + 1;
+        > :nth-child(#{$cell-index}) {
+          width: calc(#{first($cell)} * #{$width-and-gutter} - #{$gutter-width});
+          @if second($cell) != 0 {
+            // Wrapped in @if to avoid useless `margin-left: 0` CSS property
+            margin-left: calc(#{second($cell)} * #{$width-and-gutter});
+          }
+          @if $row-index != length($spec) {
+            // Add bottom margin only if this is not the last row of the grid
+            margin-bottom: $gutter-height;
+          }
+          @if $cell-in-this-row-index != length($row) {
+            // Add right margin only if this is not the last cell in the row
+            margin-right: $gutter-width;
+          }
+        }
+      }
+    } @else if type-of($row) == list {
+      @if first($row) == distribute {
+        // A distribute spec, in form "distribute 5"
+        $row-index: $row-index + 1;
+        @for $distribute-cell-index from 1 through second($row) {
+          $cell-index: $cell-index + 1;
+          > :nth-child(#{$cell-index}) {
+            // All cells have the same width
+            width: calc((100% - #{(second($row) - 1) * $gutter-width}) / #{second($row)});
+            @if $distribute-cell-index != second($row) {
+              // Add margin-right only if it's not the last element in the row
+              margin-right: $gutter-width;
+            }
+            @if $row-index != length($spec) {
+              // Add bottom margin only if this is not the last row of the grid
+              margin-bottom: $gutter-height;
+            }
+          }
+        }
+      } @else {
+        @error Cannot process row $row;
+      }
+    }
+  }
+
+}
+
+///
+/// Creates a new list with the results of calling a provided function one very item
+/// in this list.
+/// Equivalent to `Array#map` in JavaScript.
+///
+/// @param {List} $list The list which the function is being applied to.
+///
+/// @param {Function} $fn Reference to a function applied to every item.
+/// This function must take two arguments: item and index.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function square($x, $i) { @return $x * $x }
+///   fn-apply(1 2 3 4, square); // 1 4 9 16
+///
+@function _fn-apply($list, $fn) {
+  @if length($list) == 0 {
+    @return ();
+  }
+  $new-list: $list;
+  @for $i from 1 through length($list) {
+    $new-list: set-nth($new-list, $i, call($fn, nth($list, $i)));
+  }
+  @return $new-list;
+}
+
+///
+/// Applies a function against an accumulator and each item of the list (from left to
+/// right), to reduce it to a single value.
+/// Equivalent to `Array#reduce` in JavaScript.
+///
+/// @param {List} $list  The list being reduced.
+///
+/// @param {Function} $fn  Reference to a function applied to every item.
+/// This function must take two arguments: accumulated and current value.
+///
+/// @param {*} $initial The initial value of the accumulator, before any items are
+/// visited.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function sum($acc, $curr) { @return $acc + $curr }
+///   fn-apply(1 2 3 4, sum, 0); // 10
+///
+@function _fn-reduce($list, $fn, $initial) {
+  @if length($list) == 0 {
+    @return $initial;
+  }
+  $acc: $initial;
+  @for $i from 1 through length($list) {
+    $curr: nth($list, $i);
+    $acc: call($fn, $acc, $curr);
+  }
+  @return $acc;
+}
+
+///
+/// Creates a new list with all items that pass the test implemented by the provided
+/// function.
+/// Equivalent to `Array#filter` in JavaScript.
+///
+/// @param {List} $list The list being filtered.
+/// @param {Function} $fn Reference to a filtering function.
+///
+/// @return {List} A new list (see description).
+///
+/// @access private
+///
+/// @group internal util
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example
+///   @function aboveTen($x) { @return x > 10 }
+///   fn-filter(2 20 30 3 4 100, aboveTen); // 20 30 100
+///
+@function _fn-filter($list, $fn) {
+  $new-list: ();
+  @each $item in $list {
+    @if call($fn, $item) {
+      $new-list: append($new-list, $item);
+    }
+  }
+  @return $new-list;
+}
+
+
+@function _sum($acc, $curr) { @return $acc + $curr; }
+
+@function sum($list) { @return _fn-reduce($list, _sum, 0); }
+
+@function _pair-sum($pair) { @return nth($pair, 1) + nth($pair, 2); }
+
+@function sum-of-pairs($list) {
+  $list: _fn-apply($list, _pair-sum);
+  @return sum($list);
+}
+
+// Get first element of the list
+@function first($list) { @return nth($list, 1); }
+
+// Get second element of the list
+@function second($list) { @return nth($list, 2); }
+
+// Get last element of the list
+@function last($list) {@return nth($list, length($list)); }
+
+// Get first n elements of the list
+@function first-n($list, $n) {
+  $new-list: ();
+  @for $i from 1 through $n {
+    $new-list: append($new-list, nth($list, $i), 'space');
+  }
+  @return $new-list;
+}
+
+// Get n-th character from string
+@function _nth-char($string, $n) { @return str-slice($string, $n, $n); }
+
+// Get cell width based on number of cells in a row ($n) and gutter width ($g)
+@function _get-width($n, $g) {
+  @return calc((100% - #{($n - 1) * $g}) / #{$n});
+}
+
+
+///
+/// Parses a single row of string-based spec (in form of characters 'x', '-' and ' '),
+/// giving chained syntax as output.
+///
+/// It currently has to receive a fictional second argument which is unused due to Sass
+/// limitation of dynamically figuring out the number of arguments a function expects.
+///
+/// @param {String} $input - A string which represents the ASCII specification for a
+/// single row of a grid. For example, `x-x-x x' or 'x   x'. Note that the string must be
+/// quotes because it contains whitespaces (sometimes even several in a row, which is
+/// important for constructing the grid). This information would be lost if the string
+/// was unquoted.
+///
+/// @returns {List} A specification of the row in chained syntax.
+///
+/// @access private
+///
+/// @group internal
+///
+/// @author Lazar Ljubenović (lazarljubenovic)
+///
+/// @since 0.1.0
+///
+/// @example scss
+///   $row: 'x x x';
+///   parse-row($row, 0); // (1 0) (1 0) (1 0)
+///                       // All elements have one "unit" width, and no offset from
+///                       // the previous element.
+///
+/// @example scss
+///   $row: 'x-x x';
+///   parse-row($row, 0); // (2 0) (1 0)
+///                       // The first element is two units, the second one unit.
+///
+/// @example scss
+///   $row: 'x   x-x';
+///   parse-row($row, 0); // (1 0) (2 1)
+///                       // The first element is one unit. The second element is two
+///                       // units, offset by one unit from the previous element.
+///
+@function _parse-row($input) {
+
+  @if str-length($input) == 0 {
+    @error 'Parsing empty string';
+    @return ();
+  }
+
+  $span-acc: 0; // accumulated value of how much the element is wide
+  $offset-acc: 0; // accumulated value of how much the element is offset from the previous
+  $result: (); // the result will be appended here and returned in the end
+  $token: _nth-char($input, 1); // the current token, initialized as first token
+
+  // The first token is treated differently because of no previous token and specific
+  // rules for the first token.
+  @if $token == 'x' {
+    $span-acc: 1;
+  } @else if $token == ' ' {
+    $offset-acc: 1;
+  } @else {
+    @error 'A row cannot being with "-".';
+  }
+
+  $previous-token: $token;
+
+  @if 2 <= str-length($input) {
+    @for $i from 2 through str-length($input) {
+      $token: _nth-char($input, $i);
+
+      // State machine
+      @if $previous-token == 'x' and $token == ' ' {
+        $result: append($result, ($span-acc $offset-acc / 2));
+        $span-acc: 0;
+        $offset-acc: 0;
+      } @else if $previous-token == 'x' and $token == '-' {
+        // do nothing
+      } @else if $previous-token == ' ' and $token == ' ' {
+        $offset-acc: $offset-acc + 1;
+      } @else if $previous-token == ' ' and $token == 'x' {
+        $span-acc: 1;
+      } @else if $previous-token == '-' and $token == 'x' {
+        $span-acc: $span-acc + 1;
+      } @else {
+        @error 'Parsing error. Unexpected token after "' + $previous-token + '": "' + $token + '".';
+      }
+
+      $previous-token: $token;
+    }
+  }
+
+  @if $previous-token == '-' {
+    @error 'A row cannot end with "-".';
+  }
+
+  @if $span-acc > 0 {
+    $result: append($result, ($span-acc $offset-acc / 2));
+  }
+  @return $result;
+}
+
+@function _is-string($something) {
+  @return type-of($something) == string;
+}
+
+

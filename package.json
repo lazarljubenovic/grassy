@@ -7,7 +7,8 @@
     "phantomcss": "^1.1.5",
     "sass-true": "^2.2.1",
     "sassdoc": "^2.2.0",
-    "sassdocify": "^0.3.4"
+    "sassdocify": "^0.3.4",
+    "scss-bundle": "beta"
   },
   "scripts": {
     "build-sass": "node-sass --output-style compressed ./src -o ./src",
@@ -16,6 +17,7 @@
     "test": "mocha",
     "docs": "sassdoc src",
     "sassdocify": "sassdocify src",
+    "bundle": "scss-bundle -e grassy.scss -d bundle.scss",
     "visual-test": "casperjs test casper.js --engine=slimerjs"
   },
   "name": "grassy",

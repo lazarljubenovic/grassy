@@ -1,0 +1,42 @@
+@import '../grassy';
+
+body > * + * {
+  margin-top: 2em;
+}
+section {
+  background-color: beige;
+  padding: 1em;
+  article {
+    background-color: indianred;
+    height: 2em;
+  }
+}
+
+#grid-simple {
+  @include grid(
+    'x-x'
+    'x x'
+  );
+}
+
+#grid-complex {
+  @include grid(
+    'x-x-x x   x'
+    'x   x-x-x-x'
+    '    x-x   x'
+    '  x   x-x  '
+  );
+}
+
+#fixed-grid-1 { @include fixed-grid(1) }
+[id^=fixed-grid-3-] { @include fixed-grid(3) }
+[id^=fixed-grid-dd-3-] {
+  @include fixed-grid(3, $distribute-dangling: true)
+}
+[id^=fixed-grid-dd-dab-3-] {
+  @include fixed-grid(
+    3,
+    $distribute-dangling: true,
+    $dangling-at-beginning: true
+  );
+}

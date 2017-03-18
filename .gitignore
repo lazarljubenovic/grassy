@@ -7,3 +7,5 @@ node_modules/
 sassdoc/
 .sassdoc/
 .pages/
+screenshots/**/*.diff.png
+casper/casper.css

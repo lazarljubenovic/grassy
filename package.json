@@ -1,8 +1,10 @@
 {
   "devDependencies": {
+    "casperjs": "^1.1.3",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.0",
     "nodemon": "^1.11.0",
+    "phantomcss": "^1.1.5",
     "sass-true": "^2.2.1",
     "sassdoc": "^2.2.0",
     "sassdocify": "^0.3.4"
@@ -13,7 +15,8 @@
     "watch": "yarn watch-sass",
     "test": "mocha",
     "docs": "sassdoc src",
-    "sassdocify": "sassdocify src"
+    "sassdocify": "sassdocify src",
+    "visual-test": "casperjs test casper.js --engine=slimerjs"
   },
   "name": "grassy",
   "version": "0.1.0",

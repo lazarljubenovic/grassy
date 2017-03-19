@@ -21,7 +21,7 @@
     "visual-test": "casperjs test casper.js --engine=slimerjs"
   },
   "name": "grassy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build HTML layout through ASCII art in Sass.",
   "main": "grassy.scss",
   "repository": "https://github.com/lazarljubenovic/grassy/",

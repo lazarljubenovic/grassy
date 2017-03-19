@@ -19,7 +19,8 @@
     "docs": "sassdoc src",
     "sassdocify": "sassdocify src",
     "bundle": "scss-bundle -e grassy.scss -d bundle.scss",
-    "visual-test": "casperjs test casper.js --engine=slimerjs"
+    "visual-test": "casperjs test casper.js --engine=slimerjs",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && head -n10 CHANGELOG.md && echo '...etc...'"
   },
   "name": "grassy",
   "version": "0.2.0",

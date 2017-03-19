@@ -1,5 +1,5 @@
 <a name="0.2.0"></a>
-# [0.2.0](https://github.com/lazarljubenovic/grassy/compare/v1.0.0...v0.2.0) (2017-03-19)
+# [0.2.0](https://github.com/lazarljubenovic/grassy/compare/73de9ea...v0.2.0) (2017-03-19)
 
 
 ### Bug Fixes
@@ -12,11 +12,6 @@
 ### Features
 
 * add a bundled sscs file ([73de9ea](https://github.com/lazarljubenovic/grassy/commit/73de9ea))
-
-
-
-<a name="1.0.0"></a>
-# 1.0.0 (2017-03-13)
 
 
 

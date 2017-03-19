@@ -586,6 +586,7 @@
     > * {
       width: $width;
       margin-bottom: $gutter-height;
+      box-sizing: border-box;
 
       @if not $dangling-at-beginning {
         &:not(:nth-child(#{$n}n)) {
@@ -678,7 +679,7 @@
     // because there can be no dangling elements here. We just let it all flow.
     display: flex;
     flex-direction: column;
-    > * { width: 100% }
+    > * { width: 100%; box-sizing: border-box }
     > :not(:last-child) { margin-bottom: $gutter-height }
   }
 }
@@ -1234,6 +1235,8 @@
   $cell-index: 0;
   display: flex;
   flex-wrap: wrap;
+
+  > * { box-sizing: border-box }
 
   @each $row in $spec {
     @if type-of($row) == string {

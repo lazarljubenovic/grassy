@@ -129,6 +129,8 @@
   display: flex;
   flex-wrap: wrap;
 
+  > * { box-sizing: border-box }
+
   @each $row in $spec {
     @if type-of($row) == string {
       // A string-type spec, in form of 'x-x x'

@@ -15,6 +15,7 @@
         }
         @include expect {
           display: flex; flex-wrap: wrap;
+          > * { box-sizing: border-box }
           > :nth-child(1) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
           > :nth-child(2) { width: calc(2 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-bottom: 1em }
           > :nth-child(3) { width: calc(2 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-right: 1em }
@@ -35,6 +36,7 @@
         }
         @include expect {
           display: flex; flex-wrap: wrap;
+          > * { box-sizing: border-box }
           > :nth-child(1) { width: calc(3 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
           > :nth-child(2) { width: calc(2 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
           > :nth-child(3) { width: calc(1 * calc(calc((100% - 5em) / 6) + 1em) - 1em); margin-bottom: 1em }
@@ -55,6 +57,7 @@
         }
         @include expect {
           display: flex; flex-wrap: wrap;
+          > * { box-sizing: border-box }
           > :nth-child(1) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-right: 1em }
           > :nth-child(2) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em); margin-right: 1em }
           > :nth-child(3) { width: calc(1 * calc(calc((100% - 2em) / 3) + 1em) - 1em) }
@@ -77,6 +80,7 @@
         }
         @include expect {
           display: flex; flex-wrap: wrap;
+          > * { box-sizing: border-box }
           > :nth-child(1) { width: calc((100% - 0em) / 1); margin-bottom: 1em }
           > :nth-child(2) { width: calc((100% - 1em) / 2); margin-right: 1em; margin-bottom: 1em }
           > :nth-child(3) { width: calc((100% - 1em) / 2); margin-bottom: 1em }
@@ -98,6 +102,7 @@
         }
         @include expect {
           display: flex; flex-wrap: wrap;
+          > * { box-sizing: border-box }
           > :nth-child(1) { width: calc((100% - 1em) / 2); margin-right: 1em }
           > :nth-child(2) { width: calc((100% - 1em) / 2) }
         }
@@ -118,6 +123,7 @@
         }
         @include expect {
           display: flex; flex-wrap: wrap;
+          > * { box-sizing: border-box }
           > :nth-child(1) { width: calc(1 * calc(calc((100% - 4em) / 5) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
           > :nth-child(2) { width: calc(2 * calc(calc((100% - 4em) / 5) + 1em) - 1em); margin-bottom: 1em; margin-right: 1em }
           > :nth-child(3) { width: calc(2 * calc(calc((100% - 4em) / 5) + 1em) - 1em); margin-bottom: 1em }

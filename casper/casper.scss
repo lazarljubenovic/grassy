@@ -31,7 +31,10 @@ section {
 #fixed-grid-1 { @include fixed-grid(1) }
 [id^=fixed-grid-3-] { @include fixed-grid(3) }
 [id^=fixed-grid-dd-3-] {
-  @include fixed-grid(3, $distribute-dangling: true)
+  @include fixed-grid(3, $distribute-dangling: true);
+  > * {
+    padding: .2em;
+  }
 }
 [id^=fixed-grid-dd-dab-3-] {
   @include fixed-grid(

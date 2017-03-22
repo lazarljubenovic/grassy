@@ -2653,9 +2653,9 @@ sassdocify@^0.3.4:
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/sassdocify/-/sassdocify-0.3.4.tgz#d965444d1ac90ad9ec98f55d85644bb6909c7f12"
 
-scss-bundle@beta:
-  version "1.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/scss-bundle/-/scss-bundle-1.0.0-beta.2.tgz#bb8c0df8420cffe9dac29c9dbe32936a2a99ed56"
+scss-bundle@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/scss-bundle/-/scss-bundle-1.0.1.tgz#8a1517826249a71cf99c25f055779b4ac1b8a8e3"
   dependencies:
     archy "^1.0.0"
     mkdirp "^0.5.1"

@@ -9,7 +9,7 @@
     "sass-true": "^2.2.1",
     "sassdoc": "^2.2.0",
     "sassdocify": "^0.3.4",
-    "scss-bundle": "beta"
+    "scss-bundle": "^1.0.1"
   },
   "scripts": {
     "build-sass": "node-sass --output-style compressed ./src -o ./src",
